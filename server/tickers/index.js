@@ -62,7 +62,7 @@ function getTickers () {
           high: obj.high,
           low: obj.low,
         }
-        tickersObj[obj.ticker_id] = obj1
+        tickersObj[obj1.ticker_id] = obj1
       }
     }
     setTimeout(() => {
@@ -75,7 +75,7 @@ getTickers()
 
 router.get('/tickers', (request, response) => {
   let params = request.query
-  if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
+  if (params.ticker_id && params.ticker_id.indexOf('_') === -1) {
     response.send({
       error: 'Params is error!'
     })
