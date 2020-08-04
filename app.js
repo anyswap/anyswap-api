@@ -23,10 +23,12 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 const historical = require(pathLink  + '/server/historical/index.js')
 const pairs = require(pathLink  + '/server/pairs/index.js')
 const tickers = require(pathLink  + '/server/tickers/index.js')
+const orderbook = require(pathLink  + '/server/orderbook/index.js')
 
 app.use('/api', historical)
 app.use('/api', pairs)
 app.use('/api', tickers)
+app.use('/api', orderbook)
 
 app.listen(config.apiPort, () => {
   logger.info(config.apiPort + ' start success!')

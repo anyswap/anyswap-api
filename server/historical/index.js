@@ -65,11 +65,11 @@ router.get('/historical_trades', (request, response) => {
           }},
           {$project: {
             _id: null,
-            trade_id: pairs + '_FSN',
+            trade_id: '$hash',
             price: '$market',
-            target_volume: '$fv',
             base_volume: '$tv',
-            timestamp: '$timestamp',
+            target_volume: '$fv',
+            trade_timestamp: '$timestamp',
             type: 'sell'
           }}
         ]
@@ -81,7 +81,11 @@ router.get('/historical_trades', (request, response) => {
             logger.error(err)
             data.sell = []
           } else {
-            data.sell = res
+            data.sell = []
+            for (let obj of res) {
+              delete obj._id
+              data.sell.push(obj)
+            }
           }
           cb(null, data)
         })
@@ -100,11 +104,11 @@ router.get('/historical_trades', (request, response) => {
           }},
           {$project: {
             _id: null,
-            trade_id: pairs + '_FSN',
+            trade_id: '$hash',
             price: '$market',
-            target_volume: '$fv',
             base_volume: '$tv',
-            timestamp: '$timestamp',
+            target_volume: '$fv',
+            trade_timestamp: '$timestamp',
             type: 'buy'
           }}
         ]
@@ -116,7 +120,11 @@ router.get('/historical_trades', (request, response) => {
             logger.error(err)
             data.buy = []
           } else {
-            data.buy = res
+            data.buy = []
+            for (let obj of res) {
+              delete obj._id
+              data.buy.push(obj)
+            }
           }
           cb(null, data)
         })

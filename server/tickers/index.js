@@ -12,37 +12,14 @@ const router = express(); //2
 
 const TxnsCharts = mongoose.model('TxnsCharts')
 
-router.get('/tickers', (request, response) => {
+let tickersObj ={}
+
+function getTickers () {
   const NOW_TIME = Date.now()
   const query24h = {timestamp: {$gte: ((NOW_TIME / 1000) - (60 * 60 * 24))}}
-  // let params = request.query
-  // response.send(request.query)
-  // if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
-  //   response.send({
-  //     error: 'Params is error!'
-  //   })
-  //   return
-  // }
-  // let query_sell = [
-  //   {$sort: {timestamp: -1}},
-  //   {$match: {
-  //     ...query,
-  //     pairs,
-  //     type: 'EthPurchase'
-  //   }},
-  //   {$project: {
-  //     _id: null,
-  //     trade_id: pairs + '_FSN',
-  //     price: '$market',
-  //     target_volume: '$fv',
-  //     base_volume: '$tv',
-  //     timestamp: '$timestamp',
-  //     type: 'sell'
-  //   }}
-  // ]
   TxnsCharts.aggregate([
     {$match: {
-      // ...query24h,
+      ...query24h,
     }},
     {$sort: {'timestamp': 1} },
     {$group: {
@@ -71,16 +48,50 @@ router.get('/tickers', (request, response) => {
   ]).exec((err, res) => {
     if (err) {
       logger.error(err)
-      response.send([])
     } else {
-      let arr = []
       for (let obj of res) {
-        obj.ticker_id = obj.ticker_id + '_FSN'
-        arr.push(obj)
+        let obj1 = {
+          ticker_id: obj.ticker_id + '_FSN',
+          base_currency: obj.ticker_id,
+          target_currency: 'FSN',
+          last_price: obj.last_price,
+          base_volume: obj.base_volume,
+          target_volume: obj.target_volume,
+          bid: obj.bid,
+          ask: obj.ask,
+          high: obj.high,
+          low: obj.low,
+        }
+        tickersObj[obj.ticker_id] = obj1
       }
-      response.send(arr)
     }
+    setTimeout(() => {
+      getTickers()
+    }, 1000 * 10)
   })
+}
+
+getTickers()
+
+router.get('/tickers', (request, response) => {
+  let params = request.query
+  if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
+    response.send({
+      error: 'Params is error!'
+    })
+    return
+  }
+  if (params.ticker_id && tickersObj[params.ticker_id]) {
+    response.send(tickersObj[params.ticker_id])
+  } else if (params.ticker_id && !tickersObj[params.ticker_id]) {
+    response.send({})
+  } else {
+    let arr = []
+    for (let obj in tickersObj) {
+      arr.push(tickersObj[obj])
+    }
+    response.send(arr)
+  }
 })
 
 module.exports = router
