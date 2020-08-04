@@ -7,10 +7,6 @@ const bodyParser = require('body-parser')
 const config = require(__dirname + '/config')
 const logger = require(__dirname + '/server/public/methods/log4js').getLogger('App')
 
-const httpPort =  config.apiPort
-
-
-
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'X-Requested-With')
@@ -23,3 +19,15 @@ app.all('*', function (req, res, next) {
 app.use(express.static(require('path').join(__dirname, 'server')))
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
+
+const historical = require(pathLink  + '/server/historical/index.js')
+const pairs = require(pathLink  + '/server/pairs/index.js')
+const tickers = require(pathLink  + '/server/tickers/index.js')
+
+app.use('/api', historical)
+app.use('/api', pairs)
+app.use('/api', tickers)
+
+app.listen(config.apiPort, () => {
+  logger.info(config.apiPort + ' start success!')
+})
