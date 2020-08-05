@@ -16,28 +16,28 @@ const SWAPETHABI = require(pathLink + '/server/public/ABI/swapETHABI.js')
 const ethers = require('ethers')
 const web3 = require(pathLink + '/server/public/web3/index.js')
 
-function calculateEtherTokenOutputFromInput(inputAmount, inputReserve, outputReserve) {
-  inputReserve = ethers.utils.bigNumberify(inputReserve)
-  outputReserve = ethers.utils.bigNumberify(outputReserve)
-  const inputAmountWithFee = inputAmount.mul(ethers.utils.bigNumberify(997))
-  const numerator = inputAmountWithFee.mul(outputReserve)
-  const denominator = inputReserve.mul(ethers.utils.bigNumberify(1000)).add(inputAmountWithFee)
-  return numerator.div(denominator)
-}
+// function calculateEtherTokenOutputFromInput(inputAmount, inputReserve, outputReserve) {
+//   inputReserve = ethers.utils.bigNumberify(inputReserve)
+//   outputReserve = ethers.utils.bigNumberify(outputReserve)
+//   const inputAmountWithFee = inputAmount.mul(ethers.utils.bigNumberify(997))
+//   const numerator = inputAmountWithFee.mul(outputReserve)
+//   const denominator = inputReserve.mul(ethers.utils.bigNumberify(1000)).add(inputAmountWithFee)
+//   return numerator.div(denominator)
+// }
 
 
 
-let contract = new web3.eth.Contract(ERC20, coinInfo['ANY'].token)
-contract.methods.balanceOf(coinInfo['ANY'].exchange).call({from: coinInfo['ANY'].exchange}, (err, res) => {
-  let balance = 0
-  if (!err) {
-    balance = res
-  }
-  console.log(res)
-})
-web3.eth.getBalance(coinInfo['ANY'].exchange).then(res => {
-  console.log(res)
-})
+// let contract = new web3.eth.Contract(ERC20, coinInfo['ANY'].token)
+// contract.methods.balanceOf(coinInfo['ANY'].exchange).call({from: coinInfo['ANY'].exchange}, (err, res) => {
+//   let balance = 0
+//   if (!err) {
+//     balance = res
+//   }
+//   console.log(res)
+// })
+// web3.eth.getBalance(coinInfo['ANY'].exchange).then(res => {
+//   console.log(res)
+// })
 
 function getAmount (depth, pair, pecent = 200) {
   let data = {
@@ -56,8 +56,8 @@ function getAmount (depth, pair, pecent = 200) {
           if (!err) {
             balance = res
           }
-          console.log('max')
-          console.log(balance)
+          // console.log('max')
+          // console.log(balance)
           cb(null, balance)
         })
       },
@@ -67,8 +67,8 @@ function getAmount (depth, pair, pecent = 200) {
           if (!err) {
             balance = res
           }
-          console.log('min')
-          console.log(balance)
+          // console.log('min')
+          // console.log(balance)
           data.bids = [
             [
               (Number(depth.toString()) / Number(max.toString())).toFixed(5)
@@ -88,8 +88,8 @@ function getAmount (depth, pair, pecent = 200) {
           if (!err) {
             balance = res
           }
-          console.log('max')
-          console.log(balance)
+          // console.log('max')
+          // console.log(balance)
           cb(null, balance)
         })
       },
@@ -99,8 +99,8 @@ function getAmount (depth, pair, pecent = 200) {
           if (!err) {
             balance = res
           }
-          console.log('min')
-          console.log(balance)
+          // console.log('min')
+          // console.log(balance)
           data.asks = [
             [
               (Number(depth.toString()) / Number(max.toString())).toFixed(5)
