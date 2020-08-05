@@ -120,7 +120,7 @@ const web3 = require(pathLink + '/server/public/web3/index.js')
 //   })
 // }
 
-function calculateBuyAndSell (x, y, pecent) {
+function calculateBuy (x, y, pecent) {
   pecent = Number(pecent) / 10000
   // x = Number($$.fromWei(x))
   // y = Number($$.fromWei(y))
@@ -131,6 +131,21 @@ function calculateBuyAndSell (x, y, pecent) {
   let result = b * b - 4 * a * c
   let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
   let markets = (x / y) * (1 + pecent)
+  return [markets.toFixed(5), result1]
+}
+
+function calculateSell (x, y, pecent) {
+  pecent = Number(pecent) / 10000
+  // x = Number($$.fromWei(x))
+  // y = Number($$.fromWei(y))
+  let fee = 0.004
+  let a = Number(y)
+  let b = 2 * y * x - (1 + pecent) * fee * x * y
+  let c = -pecent * x * x *y
+  let result = b * b - 4 * a * c
+  let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
+  // let result2 = -b/(2*a)-Math.sqrt(result)/(2*a)
+  let markets = (x / y) * (1 - pecent)
   return [markets.toFixed(5), result1]
 }
 
@@ -164,12 +179,12 @@ function getAmount (depth, pair) {
           ticker_id: pair + '_FSN',
           timestamp: parseInt(Date.now() / 1000),
           bids: [
-            calculateBuyAndSell(x, y, depth / 2),
-            calculateBuyAndSell(x, y, depth)
+            calculateBuy(x, y, depth / 2),
+            calculateBuy(x, y, depth)
           ],
           asks: [
-            calculateBuyAndSell(y, x, depth / 2),
-            calculateBuyAndSell(y, x, depth)
+            calculateSell(x, y, depth / 2),
+            calculateSell(x, y, depth)
           ]
         }
         // console.log(calculateBuyAndSell(x, y, depth))
