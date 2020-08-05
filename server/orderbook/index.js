@@ -129,8 +129,8 @@ function calculateBuyAndSell (x, y, pecent) {
   let b = 2 * y * x - (1 + pecent) * fee * x * y
   let c = -pecent * x * x *y
   let result = b * b - 4 * a * c
-  let result1 = -b/(2*a)+Math.sqrt(result)/(2*a)
-  let markets = x / y
+  let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
+  let markets = (x / y) * (1 + pecent)
   return [markets.toFixed(5), result1]
 }
 
