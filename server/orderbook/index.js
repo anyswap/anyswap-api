@@ -135,17 +135,18 @@ function calculateBuy (x, y, pecent) {
 }
 
 function calculateSell (x, y, pecent) {
-  pecent = Number(pecent) / 10000
+  pecent = -Number(pecent) / 10000
   // x = Number($$.fromWei(x))
   // y = Number($$.fromWei(y))
   let fee = 0.004
   let a = Number(y)
   let b = 2 * y * x - (1 + pecent) * fee * x * y
-  let c = -pecent * x * x *y
+  let c = pecent * x * x * y
   let result = b * b - 4 * a * c
   let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
-  // let result2 = -b/(2*a)-Math.sqrt(result)/(2*a)
-  let markets = (x / y) * (1 - pecent)
+  // let result2 = -b / (2 * a) - Math.sqrt(result) / ( 2 * a )
+  // console.log(result2)
+  let markets = (x / y) * (1 + pecent)
   return [markets.toFixed(5), result1]
 }
 
