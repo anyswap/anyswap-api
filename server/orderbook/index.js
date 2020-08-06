@@ -131,7 +131,7 @@ function calculateBuy (x, y, pecent) {
   let result = b * b - 4 * a * c
   let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
   let markets = (x / y) * (1 + pecent)
-  return [markets.toFixed(5), result1]
+  return [markets.toFixed(5), result1.toString()]
 }
 
 function calculateSell (x, y, pecent) {
@@ -147,7 +147,7 @@ function calculateSell (x, y, pecent) {
   // let result2 = -b / (2 * a) - Math.sqrt(result) / ( 2 * a )
   // console.log(result2)
   let markets = (x / y) * (1 + pecent)
-  return [markets.toFixed(5), result1]
+  return [markets.toFixed(5), result1.toString()]
 }
 
 function getAmount (depth, pair) {
@@ -178,7 +178,7 @@ function getAmount (depth, pair) {
         let y = Number($$.fromWei(obj.token))
         let data = {
           ticker_id: pair + '_FSN',
-          timestamp: parseInt(Date.now() / 1000),
+          timestamp: parseInt(Date.now() / 1000).toString(),
           bids: [
             calculateBuy(x, y, depth / 2),
             calculateBuy(x, y, depth)

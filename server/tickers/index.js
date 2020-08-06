@@ -54,13 +54,13 @@ function getTickers () {
           ticker_id: obj.ticker_id + '_FSN',
           base_currency: obj.ticker_id,
           target_currency: 'FSN',
-          last_price: obj.last_price,
-          base_volume: obj.base_volume,
-          target_volume: obj.target_volume,
-          bid: obj.bid,
-          ask: obj.ask,
-          high: obj.high,
-          low: obj.low,
+          last_price: obj.last_price.toString(),
+          base_volume: obj.base_volume.toString(),
+          target_volume: obj.target_volume.toString(),
+          bid: obj.bid.toString(),
+          ask: obj.ask.toString(),
+          high: obj.high.toString(),
+          low: obj.low.toString(),
         }
         tickersObj[obj1.ticker_id] = obj1
       }

@@ -83,8 +83,15 @@ router.get('/historical_trades', (request, response) => {
           } else {
             data.sell = []
             for (let obj of res) {
-              delete obj._id
-              data.sell.push(obj)
+              // delete obj._id
+              data.sell.push({
+                trade_id: obj.trade_id,
+                price: obj.price.toString(),
+                base_volume: obj.base_volume.toString(),
+                target_volume: obj.target_volume.toString(),
+                trade_timestamp: obj.trade_timestamp.toString(),
+                type: obj.type,
+              })
             }
           }
           cb(null, data)
@@ -122,8 +129,16 @@ router.get('/historical_trades', (request, response) => {
           } else {
             data.buy = []
             for (let obj of res) {
-              delete obj._id
-              data.buy.push(obj)
+              // delete obj._id
+              // data.buy.push(obj)
+              data.sell.push({
+                trade_id: obj.trade_id,
+                price: obj.price.toString(),
+                base_volume: obj.base_volume.toString(),
+                target_volume: obj.target_volume.toString(),
+                trade_timestamp: obj.trade_timestamp.toString(),
+                type: obj.type,
+              })
             }
           }
           cb(null, data)
