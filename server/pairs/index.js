@@ -9,10 +9,11 @@ const $$  = require(pathLink + '/server/public/methods/tools.js')
 const express = require('express'); //1
 const router = express(); //2
 
-const tradeObj = {
-  'ANY_FSN':  {
-    "ticker_id": "ANY_FSN",
-    "base": "ANY",
+let tradeObj = {}
+for (let coin in coinInfo) {
+  tradeObj[coin + '_FSN'] = {
+    "ticker_id": coin + '_FSN',
+    "base": coin,
     "target": "FSN",
   }
 }
