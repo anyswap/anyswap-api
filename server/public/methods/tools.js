@@ -44,9 +44,8 @@ function bigToSmallSort() {
 }
 
 function timeChange (data) {
-  // console.log(data)
   // let time = data.date ? new Date(data.date.toString().length > 10 ? data.date : (Number(data.date) * 1000)) : new Date()
-  let time = data.date ? new Date(this.fromTime(data.date)) : new Date()
+  let time = data.date ? new Date(fromTime(data.date)) : new Date()
   let formatType = data.format ? data.format : '/'
   let Y = time.getFullYear()
   let M = (time.getMonth() + 1) < 10 ? ('0' + (time.getMonth() + 1)) : (time.getMonth() + 1)
@@ -73,10 +72,12 @@ function timeChange (data) {
   return time
 }
 
-function fromWei (amount, baseDecimals = 18, displayDecimals = 8, useLessThan = true) {
+function fromWei (amount, baseDecimals = 18, displayDecimals = 18, useLessThan = true) {
   // console.log(amount)
-  if (!amount) return '0'
+  if (amount === '-') return '0'
+  if (!amount || isNaN(amount)) return '0'
   amount = ethers.utils.bigNumberify(amount)
+  displayDecimals = Math.min(displayDecimals, baseDecimals)
   if (baseDecimals > 18 || displayDecimals > 18 || displayDecimals > baseDecimals) {
     throw Error(`Invalid combination of baseDecimals '${baseDecimals}' and displayDecimals '${displayDecimals}.`)
   }
