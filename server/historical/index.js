@@ -12,10 +12,11 @@ const router = express(); //2
 
 const TxnsCharts = mongoose.model('TxnsCharts')
 
-router.get('trades', (request, response) => {
-  let params = request.query
+router.get('/trades/:market_pair', (request, response) => {
+  let params = request.params
+  // console.log(params)
   // response.send(request.query)
-  if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
+  if (!params.market_pair || (params.market_pair && params.market_pair.indexOf('_') === -1)) {
     response.send({
       error: 'Params is error!'
     })
@@ -27,7 +28,7 @@ router.get('trades', (request, response) => {
     })
     return
   }
-  let pairs = params.ticker_id.split('_')[0]
+  let pairs = params.market_pair.split('_')[0]
   let limit = 100
   let type = params.type ? params.type : ''
   let query = {}
@@ -60,15 +61,6 @@ router.get('trades', (request, response) => {
     {$match: {
       ...query,
       pairs
-    }},
-    {$project: {
-      _id: null,
-      trade_id: '$hash',
-      price: '$market',
-      base_volume: '$tv',
-      target_volume: '$fv',
-      trade_timestamp: '$timestamp',
-      type: 'sell'
     }}
   ]
   if (limit) {
@@ -76,6 +68,7 @@ router.get('trades', (request, response) => {
   }
   TxnsCharts.aggregate(queryObj).exec((err, res) => {
     if (!err && res.length > 0) {
+      // logger.info(res)
       for (let obj of res) {
         data.push({
           trade_id: obj.hash,
@@ -91,7 +84,7 @@ router.get('trades', (request, response) => {
   })
 })
 
-router.get('api/historical_trades', (request, response) => {
+router.get('/api/historical_trades', (request, response) => {
   // logger.info('request.query')
   // logger.info(request.query)
   let params = request.query

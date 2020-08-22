@@ -73,7 +73,7 @@ function getTickers () {
 
 getTickers()
 
-router.get('ticker', (request, response) => {
+router.get('/ticker', (request, response) => {
   let params = request.query
   if (params.ticker_id && params.ticker_id.indexOf('_') === -1) {
     response.send({
@@ -112,7 +112,7 @@ router.get('ticker', (request, response) => {
   }
 })
 
-router.get('api/tickers', (request, response) => {
+router.get('/api/tickers', (request, response) => {
   let params = request.query
   if (params.ticker_id && params.ticker_id.indexOf('_') === -1) {
     response.send({

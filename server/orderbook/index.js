@@ -85,25 +85,25 @@ function getAmount (depth, pair) {
         cb(null, data)
       }
     ], (err, res) => {
-      console.log('res')
-      console.log(res)
+      // console.log('res')
+      // console.log(res)
       resolve(res)
     })
   })
 }
 
-router.get('orderbook', (request, response) => {
+router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
   // logger.info('request.query')
-  // logger.info(request.query)
-  let params = request.query
-  if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
+  let params = request.params
+  logger.info(params)
+  if (!params.market_pair || (params.market_pair && params.market_pair.indexOf('_') === -1)) {
     response.send({
       error: 'Params is error!'
     })
     return
   }
-  let pairs = params.ticker_id.split('_')[0]
-  if (params.ticker_id && coinInfo[pairs]) {
+  let pairs = params.market_pair.split('_')[0]
+  if (params.market_pair && coinInfo[pairs]) {
     getAmount(params.depth, pairs).then(res => {
       let data = {
         timestamp: Number(res.timestamp) * 1000 + '',
@@ -112,14 +112,14 @@ router.get('orderbook', (request, response) => {
       }
       response.send(data)
     })
-  } else if (params.ticker_id && !coinInfo[pairs]) {
+  } else if (params.market_pair && !coinInfo[pairs]) {
     response.send({})
   } else {
     response.send({})
   }
 })
 
-router.get('api/orderbook', (request, response) => {
+router.get('/api/orderbook', (request, response) => {
   // logger.info('request.query')
   // logger.info(request.query)
   let params = request.query
