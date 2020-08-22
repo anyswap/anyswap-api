@@ -12,7 +12,86 @@ const router = express(); //2
 
 const TxnsCharts = mongoose.model('TxnsCharts')
 
-router.get('/historical_trades', (request, response) => {
+router.get('trades', (request, response) => {
+  let params = request.query
+  // response.send(request.query)
+  if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
+    response.send({
+      error: 'Params is error!'
+    })
+    return
+  }
+  if ((params.start_time && isNaN(params.start_time)) || (params.end_time && isNaN(params.end_time))) {
+    response.send({
+      error: 'Time is error!'
+    })
+    return
+  }
+  let pairs = params.ticker_id.split('_')[0]
+  let limit = 100
+  let type = params.type ? params.type : ''
+  let query = {}
+  let data = []
+  if (params.limit) {
+    limit = parseInt(params.limit)
+  } else if (parseInt(params.limit) === 0) {
+    limit = 0
+  }
+  if (params.start_time && params.end_time) {
+    query.timestamp = {
+      $gte: params.start_time,
+      $lte: params.end_time
+    }
+  } else if (params.start_time && !params.end_time) {
+    query.timestamp = {
+      $gte: params.start_time
+    }
+  } else if (!params.start_time && params.end_time) {
+    query.timestamp = {
+      $lte: params.end_time
+    }
+  } else {
+    query.timestamp = {
+      $lte: (Date.now() / 1000) - (60 * 60 * 24)
+    }
+  }
+  let queryObj = [
+    {$sort: {timestamp: -1}},
+    {$match: {
+      ...query,
+      pairs
+    }},
+    {$project: {
+      _id: null,
+      trade_id: '$hash',
+      price: '$market',
+      base_volume: '$tv',
+      target_volume: '$fv',
+      trade_timestamp: '$timestamp',
+      type: 'sell'
+    }}
+  ]
+  if (limit) {
+    queryObj.push({$limit: limit})
+  }
+  TxnsCharts.aggregate(queryObj).exec((err, res) => {
+    if (!err && res.length > 0) {
+      for (let obj of res) {
+        data.push({
+          trade_id: obj.hash,
+          price: obj.market,
+          base_volume: obj.tv,
+          quote_volume: obj.fv,
+          timestamp: Number(obj.timestamp) * 1000 + '',
+          type: obj.type === 'EthPurchase' ? 'sell' : 'buy',
+        })
+      }
+    }
+    response.send(data)
+  })
+})
+
+router.get('api/historical_trades', (request, response) => {
   // logger.info('request.query')
   // logger.info(request.query)
   let params = request.query

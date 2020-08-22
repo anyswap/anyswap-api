@@ -73,7 +73,46 @@ function getTickers () {
 
 getTickers()
 
-router.get('/tickers', (request, response) => {
+router.get('ticker', (request, response) => {
+  let params = request.query
+  if (params.ticker_id && params.ticker_id.indexOf('_') === -1) {
+    response.send({
+      error: 'Params is error!'
+    })
+    return
+  }
+  if (params.ticker_id && tickersObj[params.ticker_id]) {
+    let obj1 = tickersObj[params.ticker_id]
+    let pairsObj = {
+      base_id: obj1.target_currency,
+      quote_id: obj1.ticker_id,
+      last_price: obj1.last_price,
+      base_volume: obj1.base_volume,
+      quote_volume: obj1.target_volume,
+      isFrozen: 1
+    }
+    response.send(pairsObj)
+  } else if (params.ticker_id && !tickersObj[params.ticker_id]) {
+    response.send({})
+  } else {
+    let pairsObj = {}
+    for (let obj in tickersObj) {
+      // arr.push(tickersObj[obj])
+      let obj1 = tickersObj[obj]
+      pairsObj[obj] = {
+        base_id: obj1.target_currency,
+        quote_id: obj1.ticker_id,
+        last_price: obj1.last_price,
+        base_volume: obj1.base_volume,
+        quote_volume: obj1.target_volume,
+        isFrozen: 1
+      }
+    }
+    response.send(pairsObj)
+  }
+})
+
+router.get('api/tickers', (request, response) => {
   let params = request.query
   if (params.ticker_id && params.ticker_id.indexOf('_') === -1) {
     response.send({

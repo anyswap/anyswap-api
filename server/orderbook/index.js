@@ -92,7 +92,34 @@ function getAmount (depth, pair) {
   })
 }
 
-router.get('/orderbook', (request, response) => {
+router.get('orderbook', (request, response) => {
+  // logger.info('request.query')
+  // logger.info(request.query)
+  let params = request.query
+  if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
+    response.send({
+      error: 'Params is error!'
+    })
+    return
+  }
+  let pairs = params.ticker_id.split('_')[0]
+  if (params.ticker_id && coinInfo[pairs]) {
+    getAmount(params.depth, pairs).then(res => {
+      let data = {
+        timestamp: Number(res.timestamp) * 1000 + '',
+        bids: res.bids,
+        asks: res.asks
+      }
+      response.send(data)
+    })
+  } else if (params.ticker_id && !coinInfo[pairs]) {
+    response.send({})
+  } else {
+    response.send({})
+  }
+})
+
+router.get('api/orderbook', (request, response) => {
   // logger.info('request.query')
   // logger.info(request.query)
   let params = request.query
@@ -108,6 +135,8 @@ router.get('/orderbook', (request, response) => {
       response.send(res)
     })
   } else if (params.ticker_id && !coinInfo[pairs]) {
+    response.send({})
+  } else {
     response.send({})
   }
 })

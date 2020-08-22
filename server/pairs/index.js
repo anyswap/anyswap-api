@@ -23,7 +23,7 @@ for (let pair in tradeObj) {
   tradeArr.push(tradeObj[pair])
 }
 
-router.get('/pairs', (request, response) => {
+router.get('api/pairs', (request, response) => {
   // logger.info('request.query')
   // logger.info(request.query)
   let params = request.query
