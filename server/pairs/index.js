@@ -11,10 +11,18 @@ const router = express(); //2
 
 let tradeObj = {}
 for (let coin in coinInfo) {
-  tradeObj[coin + '_FSN'] = {
-    "ticker_id": coin + '_FSN',
-    "base": coin,
-    "target": "FSN",
+  if (coin.indexOf('USDT') !== -1) {
+    tradeObj['FSN_' + coin] = {
+      "ticker_id": 'FSN_' + coin,
+      "base": "FSN",
+      "target": coin,
+    }
+  } else {
+    tradeObj[coin + '_FSN'] = {
+      "ticker_id": coin + '_FSN',
+      "base": coin,
+      "target": "FSN",
+    }
   }
 }
 
@@ -23,7 +31,7 @@ for (let pair in tradeObj) {
   tradeArr.push(tradeObj[pair])
 }
 
-router.get('api/pairs', (request, response) => {
+router.get('/api/pairs', (request, response) => {
   // logger.info('request.query')
   // logger.info(request.query)
   let params = request.query
