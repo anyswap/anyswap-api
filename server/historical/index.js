@@ -28,7 +28,8 @@ router.get('/trades/:market_pair', (request, response) => {
     })
     return
   }
-  let pairs = params.market_pair.split('_')[0]
+  const IS_USDT = params.market_pair.indexOf('USDT') !== -1
+  let pairs = IS_USDT ? params.market_pair.split('_')[1] : params.market_pair.split('_')[0]
   let limit = 100
   let type = params.type ? params.type : ''
   let query = {}
@@ -66,15 +67,15 @@ router.get('/trades/:market_pair', (request, response) => {
   if (limit) {
     queryObj.push({$limit: limit})
   }
-  TxnsCharts.aggregate(queryObj).exec((err, res) => {
+  TxnsCharts.aggregate(queryObj).limit(10).exec((err, res) => {
     if (!err && res.length > 0) {
       // logger.info(res)
       for (let obj of res) {
         data.push({
           trade_id: obj.hash,
-          price: obj.market,
-          base_volume: obj.tv,
-          quote_volume: obj.fv,
+          price: (IS_USDT ? (1 / obj.market) : obj.market).toString(),
+          base_volume: (IS_USDT ? obj.fv : obj.tv).toString(),
+          quote_volume: (IS_USDT ? obj.tv : obj.fv).toString(),
           timestamp: Number(obj.timestamp) * 1000 + '',
           type: obj.type === 'EthPurchase' ? 'sell' : 'buy',
         })
@@ -101,7 +102,8 @@ router.get('/api/historical_trades', (request, response) => {
     })
     return
   }
-  let pairs = params.ticker_id.split('_')[0]
+  const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
+  let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
   let limit = 100
   let type = params.type ? params.type : ''
   let query = {}
@@ -158,9 +160,9 @@ router.get('/api/historical_trades', (request, response) => {
               // delete obj._id
               data.sell.push({
                 trade_id: obj.trade_id,
-                price: obj.price.toString(),
-                base_volume: obj.base_volume.toString(),
-                target_volume: obj.target_volume.toString(),
+                price: (IS_USDT ? (1 / obj.price) : obj.price).toString(),
+                base_volume: (IS_USDT ? obj.target_volume : obj.base_volume).toString(),
+                target_volume: (IS_USDT ? obj.base_volume : obj.target_volume).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),
                 type: obj.type,
               })
@@ -205,9 +207,9 @@ router.get('/api/historical_trades', (request, response) => {
               // data.buy.push(obj)
               data.sell.push({
                 trade_id: obj.trade_id,
-                price: obj.price.toString(),
-                base_volume: obj.base_volume.toString(),
-                target_volume: obj.target_volume.toString(),
+                price: (IS_USDT ? (1 / obj.price) : obj.price).toString(),
+                base_volume: (IS_USDT ? obj.target_volume : obj.base_volume).toString(),
+                target_volume: (IS_USDT ? obj.base_volume : obj.target_volume).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),
                 type: obj.type,
               })

@@ -17,33 +17,36 @@ const ethers = require('ethers')
 const web3 = require(pathLink + '/server/public/web3/index.js')
 
 
-function calculateBuy (x, y, pecent) {
-  pecent = Number(pecent) / 10000
+function calculateBS (x, y, pecent, isNegative, IS_USDT) {
+  pecent = isNegative === '+' ? Number(pecent) / 10000 : -Number(pecent) / 10000
   let fee = 0.004
   let a = Number(y)
   let b = 2 * y * x - (1 + pecent) * fee * x * y
-  let c = -pecent * x * x *y
+  let c = isNegative === '+' ? (-pecent * x * x *y) : (pecent * x * x *y)
   let result = b * b - 4 * a * c
   let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
   let markets = (x / y) * (1 + pecent)
+  if (IS_USDT) {
+    markets = 1 / markets
+  }
   return [markets.toFixed(5), result1.toString()]
 }
 
-function calculateSell (x, y, pecent) {
-  pecent = -Number(pecent) / 10000
-  let fee = 0.004
-  let a = Number(y)
-  let b = 2 * y * x - (1 + pecent) * fee * x * y
-  let c = pecent * x * x * y
-  let result = b * b - 4 * a * c
-  let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
-  // let result2 = -b / (2 * a) - Math.sqrt(result) / ( 2 * a )
-  // console.log(result2)
-  let markets = (x / y) * (1 + pecent)
-  return [markets.toFixed(5), result1.toString()]
-}
+// function calculateSell (x, y, pecent) {
+//   pecent = -Number(pecent) / 10000
+//   let fee = 0.004
+//   let a = Number(y)
+//   let b = 2 * y * x - (1 + pecent) * fee * x * y
+//   let c = pecent * x * x * y
+//   let result = b * b - 4 * a * c
+//   let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
+//   // let result2 = -b / (2 * a) - Math.sqrt(result) / ( 2 * a )
+//   // console.log(result2)
+//   let markets = (x / y) * (1 + pecent)
+//   return [markets.toFixed(5), result1.toString()]
+// }
 
-function getAmount (depth, pair) {
+function getAmount (depth, pair, IS_USDT) {
   return new Promise(resolve => {
     async.waterfall([
       (cb) => {
@@ -73,12 +76,12 @@ function getAmount (depth, pair) {
           ticker_id: pair + '_FSN',
           timestamp: parseInt(Date.now() / 1000).toString(),
           bids: [
-            calculateBuy(x, y, depth / 2),
-            calculateBuy(x, y, depth)
+            calculateBS(x, y, depth / 2, '+', IS_USDT),
+            calculateBS(x, y, depth, '+', IS_USDT)
           ],
           asks: [
-            calculateSell(x, y, depth / 2),
-            calculateSell(x, y, depth)
+            calculateBS(x, y, depth / 2, '-', IS_USDT),
+            calculateBS(x, y, depth, '-', IS_USDT)
           ]
         }
         // console.log(calculateBuyAndSell(x, y, depth))
@@ -102,9 +105,10 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
     })
     return
   }
-  let pairs = params.market_pair.split('_')[0]
+  const IS_USDT = params.market_pair.indexOf('USDT') !== -1
+  let pairs = IS_USDT ? params.market_pair.split('_')[1] : params.market_pair.split('_')[0]
   if (params.market_pair && coinInfo[pairs]) {
-    getAmount(params.depth, pairs).then(res => {
+    getAmount(params.depth, pairs, IS_USDT).then(res => {
       let data = {
         timestamp: Number(res.timestamp) * 1000 + '',
         bids: res.bids,
@@ -129,9 +133,10 @@ router.get('/api/orderbook', (request, response) => {
     })
     return
   }
-  let pairs = params.ticker_id.split('_')[0]
+  const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
+  let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
   if (params.ticker_id && coinInfo[pairs]) {
-    getAmount(params.depth, pairs).then(res => {
+    getAmount(params.depth, pairs, IS_USDT).then(res => {
       response.send(res)
     })
   } else if (params.ticker_id && !coinInfo[pairs]) {
