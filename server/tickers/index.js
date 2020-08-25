@@ -1,7 +1,6 @@
 const pathLink = require('path').resolve('.')
 require(pathLink + '/server/public/db')
 const config = require(pathLink + '/config')
-const coinInfo = require(pathLink + '/config/coinInfo.js')
 const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('tickers')
 const $$  = require(pathLink + '/server/public/methods/tools.js')
 const mongoose = require('mongoose')
@@ -21,7 +20,7 @@ function getTickers () {
     {$match: {
       ...query24h,
     }},
-    {$sort: {'timestamp': 1} },
+    {$sort: {'timestamp': 1, index: 1} },
     {$group: {
       _id: '$pairs',
       last_price: {$last: '$market'},

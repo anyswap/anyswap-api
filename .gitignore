@@ -2,3 +2,4 @@ node_modules
 /config/private
 /logs
 test.js
+yarn.lock

@@ -16,6 +16,7 @@ const SWAPETHABI = require(pathLink + '/server/public/ABI/swapETHABI.js')
 const ethers = require('ethers')
 const web3 = require(pathLink + '/server/public/web3/index.js')
 
+const coinObj = coinInfo['32659']
 
 function calculateBS (x, y, pecent, isNegative, IS_USDT) {
   pecent = isNegative === '+' ? Number(pecent) / 10000 : -Number(pecent) / 10000
@@ -32,26 +33,12 @@ function calculateBS (x, y, pecent, isNegative, IS_USDT) {
   return [markets.toFixed(5), result1.toString()]
 }
 
-// function calculateSell (x, y, pecent) {
-//   pecent = -Number(pecent) / 10000
-//   let fee = 0.004
-//   let a = Number(y)
-//   let b = 2 * y * x - (1 + pecent) * fee * x * y
-//   let c = pecent * x * x * y
-//   let result = b * b - 4 * a * c
-//   let result1 = -b / (2 * a) + Math.sqrt(result) / ( 2 * a )
-//   // let result2 = -b / (2 * a) - Math.sqrt(result) / ( 2 * a )
-//   // console.log(result2)
-//   let markets = (x / y) * (1 + pecent)
-//   return [markets.toFixed(5), result1.toString()]
-// }
-
 function getAmount (depth, pair, IS_USDT) {
   return new Promise(resolve => {
     async.waterfall([
       (cb) => {
-        let contract = new web3.eth.Contract(ERC20, coinInfo[pair].token)
-        contract.methods.balanceOf(coinInfo[pair].exchange).call({from: coinInfo[pair].exchange}, (err, res) => {
+        let contract = new web3.eth.Contract(ERC20, coinObj[pair].token)
+        contract.methods.balanceOf(coinObj[pair].exchange).call({from: coinObj[pair].exchange}, (err, res) => {
           let balance = 0
           if (!err) {
             balance = res
@@ -61,7 +48,7 @@ function getAmount (depth, pair, IS_USDT) {
         })
       },
       (balance, cb) => {
-        web3.eth.getBalance(coinInfo[pair].exchange).then(res => {
+        web3.eth.getBalance(coinObj[pair].exchange).then(res => {
           // console.log(res)
           cb(null, {
             fsn: res,
@@ -71,7 +58,7 @@ function getAmount (depth, pair, IS_USDT) {
       },
       (obj, cb) => {
         let x = Number($$.fromWei(obj.fsn))
-        let y = Number($$.fromWei(obj.token, coinInfo[pair].dec))
+        let y = Number($$.fromWei(obj.token, coinObj[pair].dec))
         let data = {
           ticker_id: pair + '_FSN',
           timestamp: parseInt(Date.now() / 1000).toString(),
@@ -107,7 +94,7 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
   }
   const IS_USDT = params.market_pair.indexOf('USDT') !== -1
   let pairs = IS_USDT ? params.market_pair.split('_')[1] : params.market_pair.split('_')[0]
-  if (params.market_pair && coinInfo[pairs]) {
+  if (params.market_pair && coinObj[pairs]) {
     getAmount(params.depth, pairs, IS_USDT).then(res => {
       let data = {
         timestamp: Number(res.timestamp) * 1000 + '',
@@ -116,7 +103,7 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
       }
       response.send(data)
     })
-  } else if (params.market_pair && !coinInfo[pairs]) {
+  } else if (params.market_pair && !coinObj[pairs]) {
     response.send({})
   } else {
     response.send({})
@@ -135,11 +122,11 @@ router.get('/api/orderbook', (request, response) => {
   }
   const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
   let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
-  if (params.ticker_id && coinInfo[pairs]) {
+  if (params.ticker_id && coinObj[pairs]) {
     getAmount(params.depth, pairs, IS_USDT).then(res => {
       response.send(res)
     })
-  } else if (params.ticker_id && !coinInfo[pairs]) {
+  } else if (params.ticker_id && !coinObj[pairs]) {
     response.send({})
   } else {
     response.send({})

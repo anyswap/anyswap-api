@@ -89,6 +89,7 @@ const VolumeHistory = new Schema({
 }, {collection: "VolumeHistory"})
 
 const TxnsCharts = new Schema({
+  keyId: {type: String, unique: true},
   market: {type: Number},
   fv: {type: Number}, // fsn volume
   tv: {type: Number}, // token volume
@@ -96,6 +97,7 @@ const TxnsCharts = new Schema({
   hash: {type: String},
   pairs: {type: String},
   type: {type: String},
+  index: {type: Number},
 }, {collection: 'TxnsCharts'})
 
 const LiquidRewardResult = new Schema({
@@ -154,18 +156,31 @@ const AccountsInfo = new Schema({
   timestamp: {type: Number}, // 
 }, {collection: 'AccountsInfo'})
 
+const KlineData = new Schema({
+  type: {type: String}, // '15S', '1m', '5m', '15m'...
+  pairs: {type: String},
+  open: {type: Number},
+  high: {type: Number},
+  low: {type: Number},
+  close: {type: Number},
+  volume: {type: Number},
+  time: {type: Number},
+  timestamp: {type: Number},
+}, {collection: 'KlineData'})
+
 SyncInfo.index({number: -1}, {background: 1})
 Blocks.index({number: -1}, {background: 1})
-Transactions.index({timestamp: -1}, {background: 1})
+Transactions.index({timestamp: -1, transactionIndex: -1}, {background: 1})
 Liquidity.index({timestamp: -1}, {background: 1})
 Volume.index({timestamp: -1}, {background: 1})
 LiquidityBalances.index({blockNumber: -1}, {background: 1})
 VolumeHistory.index({timestamp: -1}, {background: 1})
-TxnsCharts.index({timestamp: -1}, {background: 1})
+TxnsCharts.index({timestamp: -1, index: -1}, {background: 1})
 LiquidRewardResult.index({end: -1}, {background: 1})
 VolumeRewardResult.index({end: -1}, {background: 1})
 AccountsReward.index({timestamp: -1}, {background: 1})
 AccountsInfo.index({ar: -1}, {background: 1})
+KlineData.index({timestamp: -1}, {background: 1})
 
 mongoose.model('SyncInfo', SyncInfo)
 mongoose.model('Blocks', Blocks)
@@ -180,6 +195,7 @@ mongoose.model('LiquidRewardResult', LiquidRewardResult)
 mongoose.model('VolumeRewardResult', VolumeRewardResult)
 mongoose.model('AccountsReward', AccountsReward)
 mongoose.model('AccountsInfo', AccountsInfo)
+mongoose.model('KlineData', KlineData)
 
 mongoose.Promise = global.Promise
 
@@ -223,4 +239,5 @@ module.exports = {
   VolumeRewardResult: mongoose.model('VolumeRewardResult'),
   AccountsReward: mongoose.model('AccountsReward'),
   AccountsInfo: mongoose.model('AccountsInfo'),
+  KlineData: mongoose.model('KlineData'),
 }

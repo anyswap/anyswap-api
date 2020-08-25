@@ -10,7 +10,7 @@ const logger = require(__dirname + '/server/public/methods/log4js').getLogger('A
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'X-Requested-With')
-  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS,GZIP')
   res.header('X-Powered-By', '3.2.1')
   res.header('Content-Type', 'application/json;charset=utf-8')
   // res.send(pathLink + '/dist/index.html')
@@ -24,11 +24,13 @@ const historical = require(pathLink  + '/server/historical/index.js')
 const pairs = require(pathLink  + '/server/pairs/index.js')
 const tickers = require(pathLink  + '/server/tickers/index.js')
 const orderbook = require(pathLink  + '/server/orderbook/index.js')
+const token = require(pathLink  + '/server/token/index.js')
 
 app.use('/', historical)
 app.use('/', pairs)
 app.use('/', tickers)
 app.use('/', orderbook)
+app.use('/', token)
 
 app.listen(config.apiPort, () => {
   logger.info(config.apiPort + ' start success!')

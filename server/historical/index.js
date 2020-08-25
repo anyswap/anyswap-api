@@ -1,7 +1,6 @@
 const pathLink = require('path').resolve('.')
 require(pathLink + '/server/public/db')
 const config = require(pathLink + '/config')
-const coinInfo = require(pathLink + '/config/coinInfo.js')
 const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('historical')
 const $$  = require(pathLink + '/server/public/methods/tools.js')
 const mongoose = require('mongoose')
@@ -58,7 +57,7 @@ router.get('/trades/:market_pair', (request, response) => {
     }
   }
   let queryObj = [
-    {$sort: {timestamp: -1}},
+    {$sort: {timestamp: -1, index: -1}},
     {$match: {
       ...query,
       pairs
@@ -131,7 +130,7 @@ router.get('/api/historical_trades', (request, response) => {
     (cb) => {
       if (!type || type === 'sell') {
         let query_sell = [
-          {$sort: {timestamp: -1}},
+          {$sort: {timestamp: -1, index: -1}},
           {$match: {
             ...query,
             pairs,
@@ -177,7 +176,7 @@ router.get('/api/historical_trades', (request, response) => {
     (result, cb) => {
       if (!type || type === 'buy') {
         let query_buy = [
-          {$sort: {timestamp: -1}},
+          {$sort: {timestamp: -1,index: -1}},
           {$match: {
             ...query,
             pairs,

@@ -10,7 +10,8 @@ const express = require('express'); //1
 const router = express(); //2
 
 let tradeObj = {}
-for (let coin in coinInfo) {
+const coinObj = coinInfo['32659']
+for (let coin in coinObj) {
   if (coin.indexOf('USDT') !== -1) {
     tradeObj['FSN_' + coin] = {
       "ticker_id": 'FSN_' + coin,
