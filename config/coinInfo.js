@@ -43,6 +43,24 @@ module.exports = {
       deposit_min_num: 0.5,
       coinInfoUrl: 'https://usdtapi.anyswap.exchange/rpc'
     },
+    [ETH]: {
+      dec: 18,
+      name: 'ANY Ethereum',
+      token: '0x5e12290c7e7eda58d092632a53bbbc717996c732',
+      exchange: '0x9ced18b0f8d7602f50d0061e6487021ec8114a1d',
+      isSwitch: 1,
+      isRedeem: 1,
+      redeem_max_num: 1000,
+      redeem_min_num: 0.05,
+      fee: 0.001,
+      maxFee: 0.1,
+      minFee: 0.005,
+      deposit: '0xCc6140a667980fbA8bF650b4aEC4f6e7Aff3a37F',
+      isDeposit: 1,
+      deposit_max_num: 1000,
+      deposit_min_num: 0.01,
+      coinInfoUrl: 'https://ethapi.anyswap.exchange/rpc'
+    },
   },
   '46688': {
     ANY: {
