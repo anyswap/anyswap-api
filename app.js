@@ -26,6 +26,7 @@ const tickers = require(pathLink  + '/server/tickers/index.js')
 const orderbook = require(pathLink  + '/server/orderbook/index.js')
 const token = require(pathLink  + '/server/token/index.js')
 const tokenList = require(pathLink  + '/server/token/anyToken.js')
+const supply = require(pathLink  + '/server/supply/index.js')
 
 app.use('/', historical)
 app.use('/', pairs)
@@ -33,6 +34,7 @@ app.use('/', tickers)
 app.use('/', orderbook)
 app.use('/', token)
 app.use('/', tokenList)
+app.use('/', supply)
 
 app.listen(config.apiPort, () => {
   logger.info(config.apiPort + ' start success!')
