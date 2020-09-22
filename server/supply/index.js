@@ -21,7 +21,8 @@ const ADDRESS = [
   '0xf2834163568277d4d3aa93cf15e54700c91ca312'
 ]
 
-let supply = '0'
+let supply = '0',
+    totalSupply = ethers.utils.bigNumberify(0)
 
 function getSupply () {
   let contract = new web3.eth.Contract(ERC20, ANY_TOKEN)
@@ -33,6 +34,7 @@ function getSupply () {
           cb(err)
         } else {
           // console.log(res)
+          totalSupply = ethers.utils.bigNumberify(res)
           cb(null, res)
         }
       })
@@ -78,7 +80,10 @@ getSupply()
 
 router.get('/supply', (request, response) => {
   console.log(supply)
-  response.send(supply)
+  response.send({
+    TotalSupply: $$.fromWei(totalSupply,18,6),
+    CirculatingSupply: supply
+  })
 })
 
 module.exports = router
