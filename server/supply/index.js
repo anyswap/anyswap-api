@@ -79,11 +79,16 @@ function getSupply () {
 getSupply()
 
 router.get('/supply', (request, response) => {
-  console.log(supply)
+  // console.log(supply)
   response.send({
     TotalSupply: $$.fromWei(totalSupply,18,6),
     CirculatingSupply: supply
   })
+})
+
+router.get('/Circulatingsupply', (request, response) => {
+  // console.log(supply)
+  response.send(supply)
 })
 
 module.exports = router
