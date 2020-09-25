@@ -91,4 +91,10 @@ router.get('/Circulatingsupply', (request, response) => {
   response.send(supply)
 })
 
+
+router.get('/totalsupply', (request, response) => {
+  // console.log(supply)
+  response.send($$.fromWei(totalSupply,18,6))
+})
+
 module.exports = router
