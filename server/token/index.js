@@ -8,6 +8,7 @@ const async = require('async')
 const express = require('express'); //1
 const router = express(); //2
 
+const {TradeInfos} = require(pathLink + '/server/public/db/summaryDB')
 // const { deflate, unzip } = require('zlib')
 
 router.get('/token', (request, response) => {
@@ -19,22 +20,29 @@ router.get('/token', (request, response) => {
   } else {
     response.send(coinInfo)
   }
-  // console.log(response)
-  // deflate(JSON.stringify(coinInfo), (err, buffer) => {
-  //   if (err) {
-  //     console.error('An error occurred:', err);
-  //     process.exitCode = 1;
-  //   }
-  //   // console.log(buffer);
-  //   // console.log(buffer.length);
-  //   // console.log(buffer.toString('base64').length);
-  //   // console.log(JSON.stringify(coinInfo).length);
-  //   response.render(buffer)
-  //   unzip(buffer, (err, data) => {
-  //     console.log(err)
-  //     console.log(data)
-  //   })
-  // })
+})
+
+let tokenList = {}
+
+function getAllToken () {
+  TradeInfos.find({}, {token: 1, exchange: 1, decimals: 1, name: 1,symbol: 1, chainID: 1}).sort({timestamp: -1}).exec((err, res) => {
+    if (!err && res.length > 0) {
+      for (let obj of res) {
+        if (!tokenList[obj.chainID]) {
+          tokenList[obj.chainID] = {}
+        }
+        tokenList[obj.chainID][obj.symbol] = obj
+      }
+    }
+    setTimeout(() => {
+      getAllToken()
+    }, 1000 * 60 * 10)
+  })
+}
+getAllToken()
+
+router.get('/tokens', (request, response) => {
+  response.send(tokenList)
 })
 
 module.exports = router

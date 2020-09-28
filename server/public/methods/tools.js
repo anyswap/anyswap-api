@@ -153,6 +153,45 @@ function compareReverse (y, x) {
     return 0
   }
 }
+
+function chainIDToName (chainID) {
+  switch (Number(chainID)) {
+    case 56:
+      return 'BNB'
+    case 32659:
+      return 'FSN'
+    default:
+      return 'FSN'
+  }
+}
+
+function nameToChainID (name) {
+  switch (name) {
+    case 'BNB':
+      return 56
+    case 'FSN':
+      return 32659
+    default:
+      return 32659
+  }
+}
+
+function getPair (trade) {
+  let obj = {}
+  if (trade.indexOf('USDT') !== -1) {
+    obj = {
+      pair: trade.split('_')[1],
+      base: trade.split('_')[0],
+    }
+  } else {
+    obj = {
+      pair: trade.split('_')[0],
+      base: trade.split('_')[1],
+    }
+  }
+  return obj
+}
+
 // global.test = '测试'
 module.exports = {
   fromTime,
@@ -162,5 +201,8 @@ module.exports = {
   timeChange,
   fromWei,
   compare,
-  compareReverse
+  compareReverse,
+  chainIDToName,
+  nameToChainID,
+  getPair
 }

@@ -1,5 +1,4 @@
 const pathLink = require('path').resolve('.')
-require(pathLink + '/server/public/db')
 const config = require(pathLink + '/config')
 const coinInfo = require(pathLink + '/config/coinInfo.js')
 const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('orderbook')
@@ -14,6 +13,7 @@ const FACTORY = require(pathLink + '/server/public/ABI/factory.json')
 const SWAPBTCABI = require(pathLink + '/server/public/ABI/swapBTCABI.js')
 const SWAPETHABI = require(pathLink + '/server/public/ABI/swapETHABI.js')
 const ethers = require('ethers')
+const NODE = require(pathLink + '/config/node.json')
 const web3 = require(pathLink + '/server/public/web3/index.js')
 
 const coinObj = coinInfo['32659']
@@ -33,8 +33,9 @@ function calculateBS (x, y, pecent, isNegative, IS_USDT) {
   return [markets.toFixed(5), result1.toString()]
 }
 
-function getAmount (depth, pair, IS_USDT) {
+function getAmount (depth, pair, IS_USDT, chainID) {
   return new Promise(resolve => {
+    web3.setProvider(NODE[chainID].url)
     async.waterfall([
       (cb) => {
         let contract = new web3.eth.Contract(ERC20, coinObj[pair].token)
@@ -93,9 +94,12 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
     return
   }
   const IS_USDT = params.market_pair.indexOf('USDT') !== -1
-  let pairs = IS_USDT ? params.market_pair.split('_')[1] : params.market_pair.split('_')[0]
+  // let pairs = IS_USDT ? params.market_pair.split('_')[1] : params.market_pair.split('_')[0]
+  let pairObj = $$.getPair(params.market_pair)
+  let pairs = pairObj.pair
+  let chainID = $$.nameToChainID(pairObj.base)
   if (params.market_pair && coinObj[pairs]) {
-    getAmount(params.depth, pairs, IS_USDT).then(res => {
+    getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       let data = {
         timestamp: Number(res.timestamp) * 1000 + '',
         bids: res.bids,
@@ -121,9 +125,12 @@ router.get('/api/orderbook', (request, response) => {
     return
   }
   const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
-  let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
+  // let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
+  let pairObj = $$.getPair(params.ticker_id)
+  let pairs = pairObj.pair
+  let chainID = $$.nameToChainID(pairObj.base)
   if (params.ticker_id && coinObj[pairs]) {
-    getAmount(params.depth, pairs, IS_USDT).then(res => {
+    getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       response.send(res)
     })
   } else if (params.ticker_id && !coinObj[pairs]) {

@@ -1,36 +1,46 @@
 const pathLink = require('path').resolve('.')
-require(pathLink + '/server/public/db')
 const config = require(pathLink + '/config')
 const coinInfo = require(pathLink + '/config/coinInfo.js')
 const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('pairs')
 const $$  = require(pathLink + '/server/public/methods/tools.js')
 
-
+const {TradeInfos} = require(pathLink + '/server/public/db/summaryDB')
 const express = require('express'); //1
 const router = express(); //2
 
 let tradeObj = {}
-const coinObj = coinInfo['32659']
-for (let coin in coinObj) {
-  if (coin.indexOf('USDT') !== -1) {
-    tradeObj['FSN_' + coin] = {
-      "ticker_id": 'FSN_' + coin,
-      "base": "FSN",
-      "target": coin,
+let tradeArr = []
+
+function getTradeInfo () {
+  TradeInfos.find({isSwitch: 1}).sort({timestamp: -1}).exec((err, res) => {
+    if (!err && res.length > 0) {
+      for (let obj of res) {
+        let base = $$.chainIDToName(obj.chainID)
+        let pair = obj.symbol.replace('-BEP20', '').replace('-bep20', '')
+        if (pair.indexOf('USDT') !== -1) {
+          tradeObj[base + '_' + pair] = {
+            "ticker_id": base + '_' + pair,
+            "base": base,
+            "target": pair,
+          }
+          tradeArr.push(tradeObj[base + '_' + pair])
+        } else {
+          tradeObj[pair + '_' + base] = {
+            "ticker_id": pair + '_' + base,
+            "base": pair,
+            "target": base,
+          }
+          tradeArr.push(tradeObj[pair + '_' + base])
+        }
+      }
     }
-  } else {
-    tradeObj[coin + '_FSN'] = {
-      "ticker_id": coin + '_FSN',
-      "base": coin,
-      "target": "FSN",
-    }
-  }
+    setTimeout(() => {
+      getTradeInfo()
+    }, 1000 * 60 * 10)
+  })
 }
 
-let tradeArr = []
-for (let pair in tradeObj) {
-  tradeArr.push(tradeObj[pair])
-}
+getTradeInfo()
 
 router.get('/api/pairs', (request, response) => {
   // logger.info('request.query')

@@ -1,15 +1,12 @@
 const pathLink = require('path').resolve('.')
-require(pathLink + '/server/public/db')
-const config = require(pathLink + '/config')
 const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('historical')
 const $$  = require(pathLink + '/server/public/methods/tools.js')
-const mongoose = require('mongoose')
 const async = require('async')
 
 const express = require('express'); //1
 const router = express(); //2
 
-const TxnsCharts = mongoose.model('TxnsCharts')
+const {TxnsCharts} = require(pathLink + '/server/public/db/summaryDB')
 
 router.get('/trades/:market_pair', (request, response) => {
   let params = request.params
@@ -28,9 +25,11 @@ router.get('/trades/:market_pair', (request, response) => {
     return
   }
   const IS_USDT = params.market_pair.indexOf('USDT') !== -1
-  let pairs = IS_USDT ? params.market_pair.split('_')[1] : params.market_pair.split('_')[0]
+  let pairObj = $$.getPair(params.market_pair)
+  let pairs = pairObj.pair
+  let chainID = $$.nameToChainID(pairObj.base)
   let limit = 100
-  let type = params.type ? params.type : ''
+
   let query = {}
   let data = []
   if (params.limit) {
@@ -60,7 +59,8 @@ router.get('/trades/:market_pair', (request, response) => {
     {$sort: {timestamp: -1, index: -1}},
     {$match: {
       ...query,
-      pairs
+      pairs,
+      chainID
     }}
   ]
   if (limit) {
@@ -102,7 +102,10 @@ router.get('/api/historical_trades', (request, response) => {
     return
   }
   const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
-  let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
+  // let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
+  let pairObj = $$.getPair(params.ticker_id)
+  let pairs = pairObj.pair
+  let chainID = $$.nameToChainID(pairObj.base)
   let limit = 100
   let type = params.type ? params.type : ''
   let query = {}
@@ -134,6 +137,7 @@ router.get('/api/historical_trades', (request, response) => {
           {$match: {
             ...query,
             pairs,
+            chainID,
             type: 'EthPurchase'
           }},
           {$project: {
@@ -180,6 +184,7 @@ router.get('/api/historical_trades', (request, response) => {
           {$match: {
             ...query,
             pairs,
+            chainID,
             type: 'TokenPurchase'
           }},
           {$project: {
