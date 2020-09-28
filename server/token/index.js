@@ -31,7 +31,14 @@ function getAllToken () {
         if (!tokenList[obj.chainID]) {
           tokenList[obj.chainID] = {}
         }
-        tokenList[obj.chainID][obj.symbol] = obj
+        tokenList[obj.chainID][obj.symbol] = {
+          "token": obj.token,
+          "exchange": obj.exchange,
+          "decimals": obj.decimals,
+          "name": obj.name,
+          // "chainID": obj.token,
+          // "symbol": obj.token,
+        }
       }
     }
     setTimeout(() => {
