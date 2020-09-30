@@ -73,8 +73,8 @@ router.get('/trades/:market_pair', (request, response) => {
         data.push({
           trade_id: obj.hash,
           price: (IS_USDT ? $$.formatNumTodec(1 / obj.market) : $$.formatNumTodec(obj.market)).toString(),
-          base_volume: (IS_USDT ? obj.fv : obj.tv).toString(),
-          quote_volume: (IS_USDT ? obj.tv : obj.fv).toString(),
+          base_volume: (IS_USDT ? obj.fv.toFixed(0) : obj.tv.toFixed(0)).toString(),
+          quote_volume: (IS_USDT ? obj.tv.toFixed(0) : obj.fv.toFixed(0)).toString(),
           timestamp: Number(obj.timestamp) * 1000 + '',
           type: obj.type === 'EthPurchase' ? 'sell' : 'buy',
         })
@@ -161,8 +161,8 @@ router.get('/api/historical_trades', (request, response) => {
               data.sell.push({
                 trade_id: obj.trade_id,
                 price: (IS_USDT ? $$.formatNumTodec(1 / obj.price) : $$.formatNumTodec(obj.price)).toString(),
-                base_volume: (IS_USDT ? obj.target_volume : obj.base_volume).toString(),
-                target_volume: (IS_USDT ? obj.base_volume : obj.target_volume).toString(),
+                base_volume: (IS_USDT ? obj.target_volume.toFixed(0) : obj.base_volume.toFixed(0)).toString(),
+                target_volume: (IS_USDT ? obj.base_volume.toFixed(0) : obj.target_volume.toFixed(0)).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),
                 type: obj.type,
               })
@@ -209,8 +209,8 @@ router.get('/api/historical_trades', (request, response) => {
               data.sell.push({
                 trade_id: obj.trade_id,
                 price: (IS_USDT ? $$.formatNumTodec(1 / obj.price) : $$.formatNumTodec(obj.price)).toString(),
-                base_volume: (IS_USDT ? obj.target_volume : obj.base_volume).toString(),
-                target_volume: (IS_USDT ? obj.base_volume : obj.target_volume).toString(),
+                base_volume: (IS_USDT ? obj.target_volume.toFixed(0) : obj.base_volume.toFixed(0)).toString(),
+                target_volume: (IS_USDT ? obj.base_volume.toFixed(0) : obj.target_volume.toFixed(0)).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),
                 type: obj.type,
               })
