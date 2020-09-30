@@ -50,34 +50,36 @@ function getTickers () {
         for (let obj of res) {
           let base = $$.chainIDToName(item.chainID)
           let pair = $$.formatPairs(obj._id)
+          let lastPrice = $$.formatNumTodec(obj.last_price)
           let obj1 = {
             ticker_id: pair + '_' + base,
             base_currency: pair,
             target_currency: base,
-            last_price: obj.last_price,
+            last_price: lastPrice,
             base_volume: obj.base_volume,
             target_volume: obj.target_volume,
-            bid: obj.last_price,
-            ask: obj.last_price,
-            high: obj.high,
-            low: obj.low,
-            open: obj.open,
-            close: obj.last_price,
+            bid: lastPrice,
+            ask: lastPrice,
+            high: $$.formatNumTodec(obj.high),
+            low: $$.formatNumTodec(obj.low),
+            open: $$.formatNumTodec(obj.open),
+            close: lastPrice,
           }
           if (pair.indexOf('USDT') !== -1) {
+            lastPrice = $$.formatNumTodec(1 / obj.last_price)
             obj1 = {
               ticker_id: base + '_' + pair,
               base_currency: base,
               target_currency: pair,
-              last_price: 1 / obj.last_price,
+              last_price: lastPrice,
               base_volume: obj.target_volume,
               target_volume: obj.base_volume,
-              bid: 1 / obj.last_price,
-              ask: 1 / obj.last_price,
-              high: 1 / obj.low,
-              low: 1 / obj.high,
-              open: 1 / obj.open,
-              close: 1 / obj.last_price,
+              bid: lastPrice,
+              ask: lastPrice,
+              high: $$.formatNumTodec(1 / obj.low),
+              low: $$.formatNumTodec(1 / obj.high),
+              open: $$.formatNumTodec(1 / obj.open),
+              close: lastPrice,
             }
           }
           // tickersObj[obj1.ticker_id] = obj1

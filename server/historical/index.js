@@ -72,7 +72,7 @@ router.get('/trades/:market_pair', (request, response) => {
       for (let obj of res) {
         data.push({
           trade_id: obj.hash,
-          price: (IS_USDT ? (1 / obj.market) : obj.market).toString(),
+          price: (IS_USDT ? $$.formatNumTodec(1 / obj.market) : $$.formatNumTodec(obj.market)).toString(),
           base_volume: (IS_USDT ? obj.fv : obj.tv).toString(),
           quote_volume: (IS_USDT ? obj.tv : obj.fv).toString(),
           timestamp: Number(obj.timestamp) * 1000 + '',
@@ -160,7 +160,7 @@ router.get('/api/historical_trades', (request, response) => {
               // delete obj._id
               data.sell.push({
                 trade_id: obj.trade_id,
-                price: (IS_USDT ? (1 / obj.price) : obj.price).toString(),
+                price: (IS_USDT ? $$.formatNumTodec(1 / obj.price) : $$.formatNumTodec(obj.price)).toString(),
                 base_volume: (IS_USDT ? obj.target_volume : obj.base_volume).toString(),
                 target_volume: (IS_USDT ? obj.base_volume : obj.target_volume).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),
@@ -208,7 +208,7 @@ router.get('/api/historical_trades', (request, response) => {
               // data.buy.push(obj)
               data.sell.push({
                 trade_id: obj.trade_id,
-                price: (IS_USDT ? (1 / obj.price) : obj.price).toString(),
+                price: (IS_USDT ? $$.formatNumTodec(1 / obj.price) : $$.formatNumTodec(obj.price)).toString(),
                 base_volume: (IS_USDT ? obj.target_volume : obj.base_volume).toString(),
                 target_volume: (IS_USDT ? obj.base_volume : obj.target_volume).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),

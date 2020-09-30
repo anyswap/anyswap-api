@@ -197,6 +197,26 @@ function formatPairs (pair) {
   return pair.replace('a', '').replace('-BEP20', '').replace('-bep20', '')
 }
 
+function formatDecimal (num, decimal) {
+  num = num.toString()
+  let index = num.indexOf('.')
+  if (index !== -1) {
+      num = num.substring(0, decimal + index + 1)
+  } else {
+      num = num.substring(0)
+  }
+  return parseFloat(num).toFixed(decimal)
+}
+
+function formatNumTodec (num) {
+  num = Number(num)
+  if (num >= 1) {
+    return formatDecimal(num, 2)
+  } else {
+    return formatDecimal(num, 6)
+  }
+}
+
 // global.test = '测试'
 module.exports = {
   fromTime,
@@ -210,5 +230,7 @@ module.exports = {
   chainIDToName,
   nameToChainID,
   getPair,
-  formatPairs
+  formatPairs,
+  formatDecimal,
+  formatNumTodec
 }
