@@ -49,7 +49,7 @@ function initAssets () {
     }
   }
   arr = arr.sort($$.smallToBigSort('unified_cryptoasset_id'))
-  console.log(arr)
+  // console.log(arr)
   for (let obj of arr) {
     let pair = obj.pair
     obj.pair = undefined
