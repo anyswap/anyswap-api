@@ -1,6 +1,4 @@
 const pathLink = require('path').resolve('.')
-const config = require(pathLink + '/config')
-const coinInfo = require(pathLink + '/config/coinInfo.js')
 const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('orderbook')
 const $$  = require(pathLink + '/server/public/methods/tools.js')
 const async = require('async')
@@ -16,7 +14,28 @@ const ethers = require('ethers')
 const NODE = require(pathLink + '/config/node.json')
 const web3 = require(pathLink + '/server/public/web3/index.js')
 
-const coinObj = coinInfo['32659']
+let coinObj = {}
+
+const {TradeInfos} = require(pathLink + '/server/public/db/summaryDB')
+
+function getCoinInfo () {
+  TradeInfos.find().exec((err, res) => {
+    if (!err && res.length > 0) {
+      for (let obj of res) {
+        if (!coinObj[obj.chainID]) {
+          coinObj[obj.chainID] = {}
+        }
+        let pair = $$.formatPairs(obj.symbol)
+        coinObj[obj.chainID][pair] = obj
+      }
+    }
+    setTimeout(() => {
+      getCoinInfo()
+    }, 1000 * 60 * 10)
+  })
+}
+getCoinInfo()
+
 
 function calculateBS (x, y, pecent, isNegative, IS_USDT) {
   pecent = isNegative === '+' ? Number(pecent) / 10000 : -Number(pecent) / 10000
@@ -38,8 +57,8 @@ function getAmount (depth, pair, IS_USDT, chainID) {
     web3.setProvider(NODE[chainID].url)
     async.waterfall([
       (cb) => {
-        let contract = new web3.eth.Contract(ERC20, coinObj[pair].token)
-        contract.methods.balanceOf(coinObj[pair].exchange).call({from: coinObj[pair].exchange}, (err, res) => {
+        let contract = new web3.eth.Contract(ERC20, coinObj[chainID][pair].token)
+        contract.methods.balanceOf(coinObj[chainID][pair].exchange).call({from: coinObj[chainID][pair].exchange}, (err, res) => {
           let balance = 0
           if (!err) {
             balance = res
@@ -49,7 +68,7 @@ function getAmount (depth, pair, IS_USDT, chainID) {
         })
       },
       (balance, cb) => {
-        web3.eth.getBalance(coinObj[pair].exchange).then(res => {
+        web3.eth.getBalance(coinObj[chainID][pair].exchange).then(res => {
           // console.log(res)
           cb(null, {
             fsn: res,
@@ -59,7 +78,7 @@ function getAmount (depth, pair, IS_USDT, chainID) {
       },
       (obj, cb) => {
         let x = Number($$.fromWei(obj.fsn))
-        let y = Number($$.fromWei(obj.token, coinObj[pair].dec))
+        let y = Number($$.fromWei(obj.token, coinObj[chainID][pair].decimals))
         let data = {
           ticker_id: pair + '_FSN',
           timestamp: parseInt(Date.now() / 1000).toString(),
@@ -98,7 +117,7 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
   let pairObj = $$.getPair(params.market_pair)
   let pairs = pairObj.pair
   let chainID = $$.nameToChainID(pairObj.base)
-  if (params.market_pair && coinObj[pairs]) {
+  if (params.market_pair && coinObj[chainID] && coinObj[chainID][pairs]) {
     getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       let data = {
         timestamp: Number(res.timestamp) * 1000 + '',
@@ -107,7 +126,7 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
       }
       response.send(data)
     })
-  } else if (params.market_pair && !coinObj[pairs]) {
+  } else if (params.market_pair && (!coinObj[chainID] || !coinObj[chainID][pairs])) {
     response.send({})
   } else {
     response.send({})
@@ -129,11 +148,11 @@ router.get('/api/orderbook', (request, response) => {
   let pairObj = $$.getPair(params.ticker_id)
   let pairs = pairObj.pair
   let chainID = $$.nameToChainID(pairObj.base)
-  if (params.ticker_id && coinObj[pairs]) {
+  if (params.ticker_id && coinObj[chainID] && coinObj[chainID][pairs]) {
     getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       response.send(res)
     })
-  } else if (params.ticker_id && !coinObj[pairs]) {
+  } else if (params.ticker_id && (!coinObj[chainID] || !coinObj[chainID][pairs])) {
     response.send({})
   } else {
     response.send({})

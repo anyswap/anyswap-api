@@ -85,10 +85,7 @@ router.get('/trades/:market_pair', (request, response) => {
 })
 
 router.get('/api/historical_trades', (request, response) => {
-  // logger.info('request.query')
-  // logger.info(request.query)
   let params = request.query
-  // response.send(request.query)
   if (!params.ticker_id || (params.ticker_id && params.ticker_id.indexOf('_') === -1)) {
     response.send({
       error: 'Params is error!'

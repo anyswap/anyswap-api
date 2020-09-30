@@ -1,0 +1,215 @@
+{
+  "32659": {
+    "ANY": {
+      "name": "Anyswap",
+      "id": "0",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 200000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "FSN": {
+      "name": "Fusion",
+      "id": "1",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 200000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "BTC": {
+      "name": "Bitcoin",
+      "id": "2",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 0.001,
+      "maxWithdraw": 20,
+      "minDeposit":  0.002,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "USDT": {
+      "name": "Tether",
+      "id": "3",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 20,
+      "maxWithdraw": 200000,
+      "minDeposit": 0.5,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "ETH": {
+      "name": "Ethereum",
+      "id": "4",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 0.01,
+      "maxWithdraw": 1000,
+      "minDeposit": 0.05,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "UNI": {
+      "name": "Uniswap",
+      "id": "5",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 10,
+      "maxWithdraw": 100000,
+      "minDeposit": 0.5,
+      "buy": 0.004,
+      "sell": 0.004
+    }
+  },
+  "56": {
+    "BNB": {
+      "name": "Binance",
+      "id": "0",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 10000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "ANY": {
+      "name": "Anyswap",
+      "id": "1",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 10,
+      "maxWithdraw": 200000,
+      "minDeposit": 0.5,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "USDT": {
+      "name": "Tether",
+      "id": "2",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 200000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "UNI": {
+      "name": "Uniswap",
+      "id": "3",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 100000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "BUSD": {
+      "name": "BUSD",
+      "id": "4",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 200000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "BURGER": {
+      "name": "Burger",
+      "id": "5",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 200000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "SPARTAN": {
+      "name": "SPARTAN",
+      "id": "6",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 2000000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "FOR": {
+      "name": "Force",
+      "id": "7",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 10000000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "BAKE": {
+      "name": "Bakery",
+      "id": "8",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 4000000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "PEACH": {
+      "name": "Peach",
+      "id": "9",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 100000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "MILK": {
+      "name": "Milk",
+      "id": "10",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 10000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "TUNA": {
+      "name": "Tuna",
+      "id": "11",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 200000000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    },
+    "PROM": {
+      "name": "Prometeus",
+      "id": "12",
+      "isWithdraw": 1,
+      "isDeposit": 1,
+      "minWithdraw": 1,
+      "maxWithdraw": 10000,
+      "minDeposit": 1,
+      "buy": 0.004,
+      "sell": 0.004
+    }
+  }
+}

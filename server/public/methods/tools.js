@@ -178,6 +178,7 @@ function nameToChainID (name) {
 
 function getPair (trade) {
   let obj = {}
+  trade = formatPairs(trade)
   if (trade.indexOf('USDT') !== -1) {
     obj = {
       pair: trade.split('_')[1],
@@ -192,6 +193,10 @@ function getPair (trade) {
   return obj
 }
 
+function formatPairs (pair) {
+  return pair.replace('a', '').replace('-BEP20', '').replace('-bep20', '')
+}
+
 // global.test = '测试'
 module.exports = {
   fromTime,
@@ -204,5 +209,6 @@ module.exports = {
   compareReverse,
   chainIDToName,
   nameToChainID,
-  getPair
+  getPair,
+  formatPairs
 }

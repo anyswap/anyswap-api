@@ -1,10 +1,3 @@
-const pathLink = require('path').resolve('.')
-const config = require(pathLink + '/config')
-const coinInfo = require(pathLink + '/config/coinInfo.js')
-const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('tickers')
-const $$  = require(pathLink + '/server/public/methods/tools.js')
-const async = require('async')
-
 const express = require('express'); //1
 const router = express(); //2
 

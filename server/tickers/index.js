@@ -49,7 +49,7 @@ function getTickers () {
       } else {
         for (let obj of res) {
           let base = $$.chainIDToName(item.chainID)
-          let pair = obj._id.replace('-BEP20', '').replace('-bep20', '')
+          let pair = $$.formatPairs(obj._id)
           let obj1 = {
             ticker_id: pair + '_' + base,
             base_currency: pair,
