@@ -51,13 +51,16 @@ function getTickers () {
           let base = $$.chainIDToName(item.chainID)
           let pair = $$.formatPairs(obj._id)
           let lastPrice = $$.formatNumTodec(obj.last_price)
+          
+          let base_volume = Number(obj.base_volume) <= 1 ? 1 : obj.base_volume.toFixed(0)
+          let token_volume = Number(obj.target_volume) <= 1 ? 1 : obj.target_volume.toFixed(0)
           let obj1 = {
             ticker_id: pair + '_' + base,
             base_currency: pair,
             target_currency: base,
             last_price: lastPrice,
-            base_volume: obj.base_volume.toFixed(0),
-            target_volume: obj.target_volume.toFixed(0),
+            base_volume: base_volume,
+            target_volume: token_volume,
             bid: lastPrice,
             ask: lastPrice,
             high: $$.formatNumTodec(obj.high),
@@ -72,8 +75,8 @@ function getTickers () {
               base_currency: base,
               target_currency: pair,
               last_price: lastPrice,
-              base_volume: obj.target_volume.toFixed(0),
-              target_volume: obj.base_volume.toFixed(0),
+              base_volume: token_volume,
+              target_volume: base_volume,
               bid: lastPrice,
               ask: lastPrice,
               high: $$.formatNumTodec(1 / obj.low),

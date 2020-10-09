@@ -70,11 +70,13 @@ router.get('/trades/:market_pair', (request, response) => {
     if (!err && res.length > 0) {
       // logger.info(res)
       for (let obj of res) {
+        let base_volume = Number(obj.fv) <= 1 ? 1 : obj.fv.toFixed(0)
+        let token_volume = Number(obj.tv) <= 1 ? 1 : obj.tv.toFixed(0)
         data.push({
           trade_id: obj.hash,
           price: (IS_USDT ? $$.formatNumTodec(1 / obj.market) : $$.formatNumTodec(obj.market)).toString(),
-          base_volume: (IS_USDT ? obj.fv.toFixed(0) : obj.tv.toFixed(0)).toString(),
-          quote_volume: (IS_USDT ? obj.tv.toFixed(0) : obj.fv.toFixed(0)).toString(),
+          base_volume: (IS_USDT ? base_volume : token_volume).toString(),
+          quote_volume: (IS_USDT ? token_volume : base_volume).toString(),
           timestamp: Number(obj.timestamp) * 1000 + '',
           type: obj.type === 'EthPurchase' ? 'sell' : 'buy',
         })
@@ -158,11 +160,13 @@ router.get('/api/historical_trades', (request, response) => {
             data.sell = []
             for (let obj of res) {
               // delete obj._id
+              let base_volume = Number(obj.base_volume) <= 1 ? 1 : obj.base_volume.toFixed(0)
+              let token_volume = Number(obj.target_volume) <= 1 ? 1 : obj.target_volume.toFixed(0)
               data.sell.push({
                 trade_id: obj.trade_id,
                 price: (IS_USDT ? $$.formatNumTodec(1 / obj.price) : $$.formatNumTodec(obj.price)).toString(),
-                base_volume: (IS_USDT ? obj.target_volume.toFixed(0) : obj.base_volume.toFixed(0)).toString(),
-                target_volume: (IS_USDT ? obj.base_volume.toFixed(0) : obj.target_volume.toFixed(0)).toString(),
+                base_volume: (IS_USDT ? token_volume : base_volume).toString(),
+                target_volume: (IS_USDT ? base_volume : token_volume).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),
                 type: obj.type,
               })
@@ -206,11 +210,13 @@ router.get('/api/historical_trades', (request, response) => {
             for (let obj of res) {
               // delete obj._id
               // data.buy.push(obj)
+              let base_volume = Number(obj.base_volume) <= 1 ? 1 : obj.base_volume.toFixed(0)
+              let token_volume = Number(obj.target_volume) <= 1 ? 1 : obj.target_volume.toFixed(0)
               data.sell.push({
                 trade_id: obj.trade_id,
                 price: (IS_USDT ? $$.formatNumTodec(1 / obj.price) : $$.formatNumTodec(obj.price)).toString(),
-                base_volume: (IS_USDT ? obj.target_volume.toFixed(0) : obj.base_volume.toFixed(0)).toString(),
-                target_volume: (IS_USDT ? obj.base_volume.toFixed(0) : obj.target_volume.toFixed(0)).toString(),
+                base_volume: (IS_USDT ? token_volume : base_volume).toString(),
+                target_volume: (IS_USDT ? base_volume : token_volume).toString(),
                 trade_timestamp: obj.trade_timestamp.toString(),
                 type: obj.type,
               })
