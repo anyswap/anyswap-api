@@ -48,6 +48,8 @@ function getTickers () {
         logger.error(err)
       } else {
         for (let obj of res) {
+          // console.log(obj._id)
+          if (!obj._id) continue
           let base = $$.chainIDToName(item.chainID)
           let pair = $$.formatPairs(obj._id)
           let lastPrice = $$.formatNumTodec(obj.last_price)
