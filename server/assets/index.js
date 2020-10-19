@@ -30,13 +30,14 @@ function initAssets () {
   let repeatArr = []
   for (let chainID in coininfo) {
     let coinList = coininfo[chainID]
+    let count = 0
     for (let obj in coinList) {
       let pair = $$.formatPairs(obj)
       if (!repeatArr.includes(pair)) {
         repeatArr.push(pair)
         arr.push({
           "name": coinList[obj].name.toLowerCase(),
-          "unified_cryptoasset_id": formatID(chainID, coinList[obj].id),
+          "unified_cryptoasset_id": formatID(chainID, count),
           "can_withdraw": coinList[obj].isWithdraw ? true : false,
           "can_deposit": coinList[obj].isDeposit ? true : false,
           "min_withdraw": coinList[obj].minWithdraw.toString(),
@@ -45,6 +46,7 @@ function initAssets () {
           "taker_fee": coinList[obj].buy.toString(),
           "pair": pair
         })
+        count ++
       }
     }
   }
