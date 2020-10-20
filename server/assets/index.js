@@ -9,6 +9,20 @@ const router = express(); //2
 
 const coininfo = require(pathLink + '/config/coininfo/index.json')
 
+function padLeft (str, num, symbol) {
+  str = str.toString()
+  symbol = symbol.toString()
+  let len = str.length
+  symbol = symbol ? symbol : '0'
+  if (len < num) {
+    for (let i = 0; i < (num - len); i++) {
+      str = '' + symbol + str
+    }
+    return str
+  }
+  return str
+}
+
 function formatID (chainID, id) {
   chainID = Number(chainID)
   let label = '0'
@@ -20,7 +34,8 @@ function formatID (chainID, id) {
       label = '1'
       break
   }
-  return label + web3.utils.padLeft(id, 4)
+  return label + padLeft(id, 4, 0)
+  // return label + web3.utils.padLeft(id, 4, 0).replace('0x', '')
 }
 
 let assetsList = {}
