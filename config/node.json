@@ -4,5 +4,11 @@
   },
   "56": {
     "url": "https://bsc-dataseed1.binance.org/"
+  },
+  "1": {
+    "url": "https://ethmainnet.anyswap.exchange"
+  },
+  "250": {
+    "url": "https://rpc.fantom.network"
   }
 }

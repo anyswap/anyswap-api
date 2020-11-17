@@ -4,7 +4,7 @@ const $$  = require(pathLink + '/server/public/methods/tools.js')
 
 const express = require('express'); //1
 const router = express(); //2
-const coininfo = require(pathLink + '/config/coininfo/index.json')
+const coininfo = require(pathLink + '/config/coininfo/index')
 let tradeObj = {}
 let tradeArr = []
 
@@ -17,6 +17,7 @@ function getTradeInfo () {
       if (
         (pair === 'BNB' && chainID === '56')
         || (pair === 'FSN' && chainID === '32659')
+        || (pair === 'FTM' && chainID === '250')
       ) continue
       if (pair.indexOf('USDT') !== -1) {
         tradeObj[base + '_' + pair] = {

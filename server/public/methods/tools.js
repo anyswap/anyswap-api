@@ -158,6 +158,8 @@ function chainIDToName (chainID) {
   switch (Number(chainID)) {
     case 56:
       return 'BNB'
+    case 250:
+      return 'FTM'
     case 32659:
       return 'FSN'
     default:
@@ -169,6 +171,8 @@ function nameToChainID (name) {
   switch (name) {
     case 'BNB':
       return 56
+    case 'FTM':
+      return 250
     case 'FSN':
       return 32659
     default:
@@ -194,7 +198,7 @@ function getPair (trade) {
 }
 
 function formatPairs (pair) {
-  return pair.replace('a', '').replace('-BEP20', '').replace('-bep20', '')
+  return pair.replace('-BEP20', '').replace('-bep20', '').replace('any', '').replace('a', '')
 }
 
 function formatDecimal (num, decimal) {

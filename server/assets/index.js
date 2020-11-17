@@ -7,7 +7,7 @@ const web3 = require(pathLink + '/server/public/web3/index.js')
 const express = require('express'); //1
 const router = express(); //2
 
-const coininfo = require(pathLink + '/config/coininfo/index.json')
+const coininfo = require(pathLink + '/config/coininfo/index')
 
 function padLeft (str, num, symbol) {
   str = str.toString()
@@ -27,6 +27,9 @@ function formatID (chainID, id) {
   chainID = Number(chainID)
   let label = '0'
   switch (chainID) {
+    case 250:
+      label = '3'
+      break
     case 56:
       label = '2'
       break

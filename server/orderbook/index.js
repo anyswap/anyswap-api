@@ -80,7 +80,7 @@ function getAmount (depth, pair, IS_USDT, chainID) {
         let x = Number($$.fromWei(obj.fsn))
         let y = Number($$.fromWei(obj.token, coinObj[chainID][pair].decimals))
         let data = {
-          ticker_id: pair + '_FSN',
+          ticker_id: pair + '_' + $$.chainIDToName(chainID),
           timestamp: parseInt(Date.now() / 1000).toString(),
           bids: [
             calculateBS(x, y, depth / 2, '+', IS_USDT),

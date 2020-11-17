@@ -2,48 +2,46 @@ const express = require('express'); //1
 const router = express(); //2
 
 router.get('/tokenList', (request, response) => {
+  console.log('Request:')
   response.send(
     {
-      "name": "Anyswap Default List",
-      "timestamp": new Date(),
-      "version": {
-        "major": 1,
-        "minor": 3,
-        "patch": 1
-      },
-      "tags": {},
-      "logoURI": "ipfs://QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir",
-      "keywords": [
-        "anyswap",
-        "default"
+      keywords: ["defi"],
+      logoURI: "https://umaproject.org/assets/images/UMA_square_red_logo_circle.png",
+      name: "FSN",
+      timestamp: "2020-08-25T01:40:34.305Z",
+      tokens: [
+        {
+          address: "0x4E2F3b7ED3E4247cfdE11F3721C8eA30A65B935b",
+          chainId: 4,
+          decimals: 18,
+          name: "DAI",
+          symbol: "DAI"
+        },
+        {
+          address: "0xB9664E57EC97cA273a031dAdc56b6c553E7F1894",
+          chainId: 4,
+          decimals: 18,
+          name: "SUSD",
+          symbol: "SUSD"
+        },
+        {
+          address: "0x2f674F271F101B60831ad462fc13Fb634136c799",
+          chainId: 4,
+          decimals: 18,
+          name: "aETH",
+          symbol: "aETH"
+        },
+        {
+          address: "0x48D807665278B5DF792538Aa6BE5Db71791933dD",
+          chainId: 4,
+          decimals: 18,
+          name: "aBTC",
+          symbol: "aBTC"
+        }
       ],
-      "tokens": [
-        {
-          "name": "WETH Token",
-          "address": "0x84F2EEad1018229Eb4957cb8CdFCB130B0f15e74",
-          "symbol": "WETH",
-          "decimals": 18,
-          "chainId": 4,
-          "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xB6eD7644C69416d67B522e20bC294A9a9B405B31/logo.png"
-        },
-        {
-          "name": "MyETH Token",
-          "address": "0xAD1DdfA07040cDeB360eEF7e3580294F9f7637a4",
-          "symbol": "MyETH",
-          "decimals": 18,
-          "chainId": 4,
-          "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xB6eD7644C69416d67B522e20bC294A9a9B405B31/logo.png"
-        },
-        {
-          "name": "MyBTC Token",
-          "address": "0x3886B869d9c1f2057F615A936E353d32AB4767da",
-          "symbol": "MyBTC",
-          "decimals": 8,
-          "chainId": 4,
-          "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xB6eD7644C69416d67B522e20bC294A9a9B405B31/logo.png"
-        },
-      ]
-    })
+      version: {major: 1, minor: 0, patch: 0}
+    }
+  )
 })
 
 module.exports = router
