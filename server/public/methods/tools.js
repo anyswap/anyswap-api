@@ -156,6 +156,8 @@ function compareReverse (y, x) {
 
 function chainIDToName (chainID) {
   switch (Number(chainID)) {
+    case 1:
+      return 'ETH'
     case 56:
       return 'BNB'
     case 250:
@@ -169,6 +171,8 @@ function chainIDToName (chainID) {
 
 function nameToChainID (name) {
   switch (name) {
+    case 'ETH':
+      return 1
     case 'BNB':
       return 56
     case 'FTM':

@@ -18,6 +18,7 @@ function getTradeInfo () {
         (pair === 'BNB' && chainID === '56')
         || (pair === 'FSN' && chainID === '32659')
         || (pair === 'FTM' && chainID === '250')
+        || (pair === 'ETH' && chainID === '1')
       ) continue
       if (pair.indexOf('USDT') !== -1) {
         tradeObj[base + '_' + pair] = {

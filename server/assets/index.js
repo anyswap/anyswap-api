@@ -27,6 +27,9 @@ function formatID (chainID, id) {
   chainID = Number(chainID)
   let label = '0'
   switch (chainID) {
+    case 1:
+      label = '4'
+      break
     case 250:
       label = '3'
       break
