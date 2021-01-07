@@ -250,7 +250,7 @@ function getTvl () {
       totalHt = totalHt.add(tokenList[lpToken].ht)
     }
     totalHt = totalHt.mul(baseUED).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
-    hecoTvl = $$.fromWei(totalHt.toString())
+    hecoTvl = $$.fromWei(totalHt.toString(),18,2)
     setTimeout(() => {
       getTvl()
     }, 1000 * 60 * 10)
