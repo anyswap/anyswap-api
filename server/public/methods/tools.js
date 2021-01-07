@@ -225,6 +225,17 @@ function formatNumTodec (num) {
   }
 }
 
+function formatWeb3Str (str, len = 64) {
+  str = str.indexOf('0x') === 0 ? str.substr(2) : str
+  let strLen = str.length / len
+  let arr = []
+  for (let i = 0; i < strLen; i++) {
+    let str1 = str.substr(i * len, len)
+    arr.push('0x' + str1)
+  }
+  return arr
+}
+
 // global.test = '测试'
 module.exports = {
   fromTime,
@@ -240,5 +251,6 @@ module.exports = {
   getPair,
   formatPairs,
   formatDecimal,
-  formatNumTodec
+  formatNumTodec,
+  formatWeb3Str
 }
