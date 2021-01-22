@@ -164,6 +164,8 @@ function chainIDToName (chainID) {
       return 'FTM'
     case 32659:
       return 'FSN'
+    case 128:
+      return 'HT'
     default:
       return 'FSN'
   }
@@ -179,6 +181,8 @@ function nameToChainID (name) {
       return 250
     case 'FSN':
       return 32659
+    case 'HT':
+      return 128
     default:
       return 32659
   }
