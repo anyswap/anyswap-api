@@ -241,6 +241,7 @@ function formatPairs (pair) {
 }
 
 function formatDecimal (num, decimal) {
+  if (!num) return '0.00'
   num = num.toString()
   let index = num.indexOf('.')
   if (index !== -1) {

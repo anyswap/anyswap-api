@@ -27,7 +27,7 @@ router.get('/trades/:market_pair', (request, response) => {
   const IS_USDT = params.market_pair.indexOf('USDT') !== -1
   let pairObj = $$.getPair(params.market_pair)
   let chainID = $$.nameToChainID(pairObj.base)
-  let pairs = $$.formatDecimal(pairObj.pair, chainID)
+  let pairs = $$.getFormatPair(pairObj.pair, chainID)
   let limit = 100
 
   let query = {}
@@ -103,7 +103,7 @@ router.get('/api/historical_trades', (request, response) => {
   const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
   let pairObj = $$.getPair(params.ticker_id)
   let chainID = $$.nameToChainID(pairObj.base)
-  let pairs = $$.formatDecimal(pairObj.pair, chainID)
+  let pairs = $$.getFormatPair(pairObj.pair, chainID)
   let limit = 100
   let type = params.type ? params.type : ''
   let query = {}

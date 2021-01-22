@@ -111,7 +111,7 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
   const IS_USDT = params.market_pair.indexOf('USDT') !== -1
   let pairObj = $$.getPair(params.market_pair)
   let chainID = $$.nameToChainID(pairObj.base)
-  let pairs = $$.formatDecimal(pairObj.pair, chainID)
+  let pairs = $$.getFormatPair(pairObj.pair, chainID)
   if (params.market_pair && coinObj[chainID] && coinObj[chainID][pairs]) {
     getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       let data = {
@@ -141,7 +141,7 @@ router.get('/api/orderbook', (request, response) => {
   const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
   let pairObj = $$.getPair(params.ticker_id)
   let chainID = $$.nameToChainID(pairObj.base)
-  let pairs = $$.formatDecimal(pairObj.pair, chainID)
+  let pairs = $$.getFormatPair(pairObj.pair, chainID)
   if (params.ticker_id && coinObj[chainID] && coinObj[chainID][pairs]) {
     getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       response.send(res)
