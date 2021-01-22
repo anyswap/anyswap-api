@@ -6,11 +6,6 @@ const express = require('express'); //1
 const router = express(); //2
 
 const ERC20 = require(pathLink + '/server/public/ABI/erc20.json')
-const EXCHANGE = require(pathLink + '/server/public/ABI/exchange.json')
-const FACTORY = require(pathLink + '/server/public/ABI/factory.json')
-const SWAPBTCABI = require(pathLink + '/server/public/ABI/swapBTCABI.js')
-const SWAPETHABI = require(pathLink + '/server/public/ABI/swapETHABI.js')
-const ethers = require('ethers')
 const NODE = require(pathLink + '/config/node.json')
 const web3 = require(pathLink + '/server/public/web3/index.js')
 
@@ -25,7 +20,8 @@ function getCoinInfo () {
         if (!coinObj[obj.chainID]) {
           coinObj[obj.chainID] = {}
         }
-        let pair = $$.formatPairs(obj.symbol)
+        // let pair = $$.formatPairs(obj.symbol)
+        let pair = obj.symbol
         coinObj[obj.chainID][pair] = obj
       }
     }
@@ -113,10 +109,9 @@ router.get('/orderbook/:market_pair/:depth/:level', (request, response) => {
     return
   }
   const IS_USDT = params.market_pair.indexOf('USDT') !== -1
-  // let pairs = IS_USDT ? params.market_pair.split('_')[1] : params.market_pair.split('_')[0]
   let pairObj = $$.getPair(params.market_pair)
-  let pairs = pairObj.pair
   let chainID = $$.nameToChainID(pairObj.base)
+  let pairs = $$.formatDecimal(pairObj.pair, chainID)
   if (params.market_pair && coinObj[chainID] && coinObj[chainID][pairs]) {
     getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       let data = {
@@ -144,10 +139,9 @@ router.get('/api/orderbook', (request, response) => {
     return
   }
   const IS_USDT = params.ticker_id.indexOf('USDT') !== -1
-  // let pairs = IS_USDT ? params.ticker_id.split('_')[1] : params.ticker_id.split('_')[0]
   let pairObj = $$.getPair(params.ticker_id)
-  let pairs = pairObj.pair
   let chainID = $$.nameToChainID(pairObj.base)
+  let pairs = $$.formatDecimal(pairObj.pair, chainID)
   if (params.ticker_id && coinObj[chainID] && coinObj[chainID][pairs]) {
     getAmount(params.depth, pairs, IS_USDT, chainID).then(res => {
       response.send(res)

@@ -187,22 +187,57 @@ function nameToChainID (name) {
 function getPair (trade) {
   let obj = {}
   trade = formatPairs(trade)
+  let arr = trade.split('_')
   if (trade.indexOf('USDT') !== -1) {
     obj = {
-      pair: trade.split('_')[1],
-      base: trade.split('_')[0],
+      pair: arr[1],
+      base: arr[0],
     }
   } else {
     obj = {
-      pair: trade.split('_')[0],
-      base: trade.split('_')[1],
+      pair: arr[0],
+      base: arr[1],
     }
   }
   return obj
 }
 
+function getFormatPair (pair, chainID) {
+  chainID = Number(chainID)
+  if (chainID === 32659) {
+    if (['USDT','ETH','UNI','BTC'].includes(pair)) {
+      return 'a' + pair
+    } else if (['OMG','LINK','DAI','COMP'].includes(pair)) {
+      return 'any' + pair
+    }
+    return pair
+  } else if (chainID === 250) {
+    return pair
+  } else if (chainID === 128) {
+    if (['USDT','ETH','BNB','BTC', 'FSN'].includes(pair)) {
+      return 'any' + pair
+    }
+    return pair
+  } else if (chainID === 56) {
+    if (['USDT','ETH','UNI','BTC', 'FSN', 'LINK', 'COMP', 'YFI', 'OMG', 'DAI'].includes(pair)) {
+      return 'any' + pair
+    }
+    return pair
+  }
+  return pair
+}
+
 function formatPairs (pair) {
-  return pair.replace('-BEP20', '').replace('-bep20', '').replace('any', '').replace('a', '')
+  if (pair.indexOf('-BEP20') !== -1) {
+    pair = pair.replace('-BEP20', '')
+  } else if (pair.indexOf('-bep20') !== -1) {
+    pair = pair.replace('-bep20', '')
+  } else if (pair.indexOf('any') === 0) {
+    pair = pair.replace('any', '')
+  } else if (pair.indexOf('a') === 0) {
+    pair = pair.replace('a', '')
+  }
+  return pair
 }
 
 function formatDecimal (num, decimal) {
@@ -249,6 +284,7 @@ module.exports = {
   chainIDToName,
   nameToChainID,
   getPair,
+  getFormatPair,
   formatPairs,
   formatDecimal,
   formatNumTodec,

@@ -1,8 +1,5 @@
 const pathLink = require('path').resolve('.')
 const $$  = require(pathLink + '/server/public/methods/tools.js')
-const logger = require(pathLink + '/server/public/methods/log4js.js').getLogger('assets')
-const async = require('async')
-const web3 = require(pathLink + '/server/public/web3/index.js')
 
 const express = require('express'); //1
 const router = express(); //2
@@ -27,6 +24,9 @@ function formatID (chainID, id) {
   chainID = Number(chainID)
   let label = '0'
   switch (chainID) {
+    case 128:
+      label = '5'
+      break
     case 1:
       label = '4'
       break

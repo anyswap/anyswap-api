@@ -161,7 +161,6 @@ router.get('/ticker', (request, response) => {
     response.send(pairsObj)
   } else {
     let pairObj = $$.getPair(params.market_pair)
-    let pairs = pairObj.pair
     let chainID = $$.nameToChainID(pairObj.base)
     if (params.ticker_id && tickersObj[chainID][params.ticker_id] && tickersObj[chainID][params.ticker_id]) {
       let obj1 = tickersObj[chainID][params.ticker_id]
@@ -212,7 +211,6 @@ router.get('/api/tickers', (request, response) => {
     response.send(arr)
   } else {
     let pairObj = $$.getPair(params.market_pair)
-    let pairs = pairObj.pair
     let chainID = $$.nameToChainID(pairObj.base)
     if (params.ticker_id && tickersObj[chainID] && tickersObj[chainID][params.ticker_id]) {
       let obj1 = tickersObj[chainID][params.ticker_id]
