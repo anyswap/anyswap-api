@@ -10,5 +10,8 @@
   },
   "250": {
     "url": "https://rpc.fantom.network"
+  },
+  "128": {
+    "url": "https://http-mainnet.hecochain.com"
   }
 }
