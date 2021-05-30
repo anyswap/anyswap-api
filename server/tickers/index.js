@@ -9,7 +9,8 @@ const router = express(); //2
 
 const NODE = require(pathLink + '/config/node.json')
 
-const {TxnsCharts} = require(pathLink + '/server/public/db/summaryDB')
+// const {TxnsCharts} = require(pathLink + '/server/public/db/summaryDB')
+const db = require(pathLink + '/server/public/db/db')
 
 let tickersObj ={}
 
@@ -29,12 +30,13 @@ function getTickers () {
       ...query24h,
       chainID: Number(item.chainID)
     }
-    // console.log(query)
-    TxnsCharts.aggregate([
+    // console.log(db)
+    // console.log(item.chainID)
+    db[item.chainID].TxnsCharts.aggregate([
       {$match: query},
       {$sort: {'timestamp': 1, index: 1} },
       {$group: {
-        _id: '$pairs',
+        _id: '$symbol',
         last_price: {$last: '$market'},
         target_volume: {$sum: '$fv'},
         base_volume: {$sum: '$tv'},
@@ -94,7 +96,7 @@ function getTickers () {
       cb(null, '')
     })
   }, () => {
-    // console.log(tradeObj)
+    console.log(tradeObj)
     tickersObj = tradeObj
     setTimeout(() => {
       getTickers()

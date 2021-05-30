@@ -11,10 +11,10 @@ const web3 = require(pathLink + '/server/public/web3/index.js')
 
 let coinObj = {}
 
-const {TradeInfos} = require(pathLink + '/server/public/db/summaryDB')
+const {TradeInfosV2} = require(pathLink + '/server/public/db/summaryDB')
 
 function getCoinInfo () {
-  TradeInfos.find().exec((err, res) => {
+  TradeInfosV2.find().exec((err, res) => {
     if (!err && res.length > 0) {
       for (let obj of res) {
         if (!coinObj[obj.chainID]) {

@@ -27,12 +27,25 @@ const TradeInfos = new Schema({
   decimals: {type: Number},
   timestamp: {type: Number},
   chainID:  {type: Number},
-  isSwitch: {type: Number, default: 0}
+  isSwitch: {type: Number, default: 1}
 }, {collection: 'TradeInfos'})
+
+const TradeInfosV2 = new Schema({
+  key: {type: String, unique: true},
+  token: {type: String},
+  exchange: {type: String},
+  symbol: {type: String},
+  name: {type: String},
+  decimals: {type: Number},
+  timestamp: {type: Number},
+  chainID:  {type: Number},
+  isSwitch: {type: Number, default: 1}
+}, {collection: 'TradeInfosV2'})
 
 
 TxnsCharts.index({timestamp: -1, index: -1}, {background: 1})
 TradeInfos.index({timestamp: -1}, {background: 1})
+TradeInfosV2.index({timestamp: -1}, {background: 1})
 
 const OPTIONS = {
   useCreateIndex: true,
@@ -61,5 +74,6 @@ SummaryDB.on('disconnected', () => {
 })
 module.exports = {
   TxnsCharts: SummaryDB.model('TxnsCharts', TxnsCharts),
-  TradeInfos: SummaryDB.model('TradeInfos', TradeInfos)
+  TradeInfos: SummaryDB.model('TradeInfos', TradeInfos),
+  TradeInfosV2: SummaryDB.model('TradeInfosV2', TradeInfosV2),
 }

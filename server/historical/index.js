@@ -6,7 +6,7 @@ const async = require('async')
 const express = require('express'); //1
 const router = express(); //2
 
-const {TxnsCharts} = require(pathLink + '/server/public/db/summaryDB')
+const db = require(pathLink + '/server/public/db/db')
 
 router.get('/trades/:market_pair', (request, response) => {
   let params = request.params
@@ -59,14 +59,14 @@ router.get('/trades/:market_pair', (request, response) => {
     {$sort: {timestamp: -1, index: -1}},
     {$match: {
       ...query,
-      pairs,
+      symbol: pairs,
       chainID
     }}
   ]
   if (limit) {
     queryObj.push({$limit: limit})
   }
-  TxnsCharts.aggregate(queryObj).limit(10).exec((err, res) => {
+  db[chainID].TxnsCharts.aggregate(queryObj).limit(10).exec((err, res) => {
     if (!err && res.length > 0) {
       // logger.info(res)
       for (let obj of res) {
@@ -134,7 +134,7 @@ router.get('/api/historical_trades', (request, response) => {
           {$sort: {timestamp: -1, index: -1}},
           {$match: {
             ...query,
-            pairs,
+            symbol: pairs,
             chainID,
             type: 'EthPurchase'
           }},
@@ -151,7 +151,7 @@ router.get('/api/historical_trades', (request, response) => {
         if (limit) {
           query_sell.push({$limit: limit})
         }
-        TxnsCharts.aggregate(query_sell).exec((err, res) => {
+        db[chainID].TxnsCharts.aggregate(query_sell).exec((err, res) => {
           if (err) {
             logger.error(err)
             data.sell = []
@@ -183,7 +183,7 @@ router.get('/api/historical_trades', (request, response) => {
           {$sort: {timestamp: -1,index: -1}},
           {$match: {
             ...query,
-            pairs,
+            symbol: pairs,
             chainID,
             type: 'TokenPurchase'
           }},
@@ -200,7 +200,7 @@ router.get('/api/historical_trades', (request, response) => {
         if (limit) {
           query_buy.push({$limit: limit})
         }
-        TxnsCharts.aggregate(query_buy).exec((err, res) => {
+        db[chainID].TxnsCharts.aggregate(query_buy).exec((err, res) => {
           if (err) {
             logger.error(err)
             data.buy = []

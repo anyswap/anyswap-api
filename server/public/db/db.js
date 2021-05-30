@@ -77,12 +77,28 @@ const VolumeHistory = new Schema({
   logIndex: {type: Number},
 }, {collection: "VolumeHistory"})
 
+const TxnsCharts = new Schema({
+  keyId: {type: String, unique: true},
+  market: {type: Number},
+  fv: {type: Number}, // fsn volume
+  tv: {type: Number}, // token volume
+  timestamp: {type: Number},
+  hash: {type: String},
+  symbol: {type: String},
+  type: {type: String},
+  index: {type: Number},
+  chainID: {type: Number},
+  symbol: {type: String},
+  token: {type: String},
+}, {collection: 'TxnsCharts'})
+
 SyncInfo.index({number: -1}, {background: 1})
 Transactions.index({timestamp: -1, transactionIndex: -1}, {background: 1})
 Liquidity.index({timestamp: -1}, {background: 1})
 Volume.index({timestamp: -1}, {background: 1})
 LiquidityBalances.index({blockNumber: -1}, {background: 1})
 VolumeHistory.index({timestamp: -1}, {background: 1})
+TxnsCharts.index({timestamp: -1}, {background: 1})
 
 let db = {}
 const OPTIONS = {
@@ -103,6 +119,7 @@ for (let obj in nodeDB) {
   db[key].Accounts = db[key].model('Accounts', Accounts)
   db[key].LiquidityBalances = db[key].model('LiquidityBalances', LiquidityBalances)
   db[key].VolumeHistory = db[key].model('VolumeHistory', VolumeHistory)
+  db[key].TxnsCharts = db[key].model('TxnsCharts', TxnsCharts)
 
   /**
     * 连接成功
